@@ -1,7 +1,8 @@
 from app import app
+from flask import render_template
 
 @app.route('/')
 def home():
-    return 'Welcome to the Online Movie Ticket Booking System!'
+    return render_template('home.html')
 
 # More routes will be added here
