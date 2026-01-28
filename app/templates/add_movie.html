@@ -24,6 +24,17 @@
             <textarea id="description" name="description" rows="4"></textarea>
             <label for="show_date">Show Date</label>
             <input type="date" id="show_date" name="show_date" required>
+            <script>
+            // Set min date to today
+            document.addEventListener('DOMContentLoaded', function() {
+                var today = new Date();
+                var yyyy = today.getFullYear();
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var dd = String(today.getDate()).padStart(2, '0');
+                var minDate = yyyy + '-' + mm + '-' + dd;
+                document.getElementById('show_date').setAttribute('min', minDate);
+            });
+            </script>
             <label for="num_shows">Number of Shows</label>
             <select id="num_shows" name="num_shows" required>
                 {% for i in range(1, 9) %}
