@@ -26,8 +26,21 @@
         <div class="screen">Theater Screen</div>
         <form method="POST" id="seats-form">
             <div class="seats">
-                {% set seat_idx = 0 %}
-                {% for row in ['A','B','C','D','E'] %}
+                <div style="width:100%; text-align:left; margin-bottom:6px; color:#ffb347; font-weight:bold;">First Class (A, B)</div>
+                {% for row in ['A','B'] %}
+                <div class="row">
+                    {% for num in range(1,9) %}
+                        {% set seat_num = row ~ num %}
+                        {% set booked = seat_num in booked_seats %}
+                        <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
+                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" {% if booked %}disabled{% endif %}>
+                            {{ seat_num }}
+                        </label>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div style="width:100%; text-align:left; margin:18px 0 6px; color:#b3e6ff; font-weight:bold;">Second Class (C, D, E)</div>
+                {% for row in ['C','D','E'] %}
                 <div class="row">
                     {% for num in range(1,9) %}
                         {% set seat_num = row ~ num %}
