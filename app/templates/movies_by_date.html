@@ -23,9 +23,9 @@
             {% for movie_title, shows in movies_dict.items() %}
                 <div class="movie">
                     <div class="movie-title">{{ movie_title }}</div>
-                    <div class="showtimes">
+                    <div class="showtimes" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;">
                         {% for show in shows %}
-                            <span style="margin-right:18px;">{{ show.show_time.strftime('%I:%M %p') }}</span>
+                            <span style="display:inline-block; background:#232a34; border:2px solid #ffb347; border-radius:8px; padding:8px 18px; font-weight:bold; color:#ffb347; min-width:90px; text-align:center; box-shadow:0 2px 8px #0002;">{{ show.show_time.strftime('%I:%M %p') }}</span>
                         {% endfor %}
                     </div>
                 </div>

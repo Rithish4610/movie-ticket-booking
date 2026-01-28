@@ -41,14 +41,22 @@ def movies():
 @app.route('/movies/<date_str>')
 def movies_by_date(date_str):
     # date_str format: 'dd MMM yyyy'
+    date_start = datetime.strptime(date_str, '%d %b %Y')
+    date_end = date_start + timedelta(days=1)
+    now = datetime.now()
     shows = Show.query.join(Movie).filter(
-        Show.show_time >= datetime.strptime(date_str, '%d %b %Y'),
-        Show.show_time < datetime.strptime(date_str, '%d %b %Y') + timedelta(days=1)
+        Show.show_time >= date_start,
+        Show.show_time < date_end
     ).order_by(Show.show_time).all()
     from collections import defaultdict, OrderedDict
     movies_dict = defaultdict(list)
     for show in shows:
-        movies_dict[show.movie.title].append(show)
+        # For today, only include shows in the future
+        if date_start.date() == now.date():
+            if show.show_time >= now:
+                movies_dict[show.movie.title].append(show)
+        else:
+            movies_dict[show.movie.title].append(show)
     movies_dict = OrderedDict(sorted(movies_dict.items()))
     return render_template('movies_by_date.html', date=date_str, movies_dict=movies_dict)
 
