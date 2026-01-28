@@ -10,9 +10,31 @@ def home():
 
 @app.route('/movies')
 def movies():
-    # Show only available dates
+    # Show only available dates (today or future)
     shows = Show.query.order_by(Show.show_time).all()
-    dates = sorted(set(show.show_time.strftime('%d %b %Y') for show in shows))
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    # Only include dates that have at least one show in the future (today or later)
+    shows_by_date = {}
+    for show in shows:
+        show_date = show.show_time.replace(hour=0, minute=0, second=0, microsecond=0)
+        date_str = show.show_time.strftime('%d %b %Y')
+        if show_date >= today:
+            if date_str not in shows_by_date:
+                shows_by_date[date_str] = []
+            shows_by_date[date_str].append(show)
+    # Remove dates where all shows are in the past (for today)
+    filtered_dates = []
+    now = datetime.now()
+    for date_str, show_list in shows_by_date.items():
+        # If date is after today, always include
+        date_obj = datetime.strptime(date_str, '%d %b %Y')
+        if date_obj > today:
+            filtered_dates.append(date_str)
+        else:
+            # For today, only include if at least one show is in the future
+            if any(show.show_time >= now for show in show_list):
+                filtered_dates.append(date_str)
+    dates = sorted(filtered_dates, key=lambda d: datetime.strptime(d, '%d %b %Y'))
     return render_template('movies.html', dates=dates)
 
 # Show movies and showtimes for a selected date
