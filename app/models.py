@@ -21,7 +21,8 @@ class Show(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
 	show_time = db.Column(db.DateTime, nullable=False)
-	ticket_price = db.Column(db.Float, nullable=False)
+	ticket_price_first = db.Column(db.Float, nullable=False)
+	ticket_price_second = db.Column(db.Float, nullable=False)
 	seats = db.relationship('Seat', backref='show', lazy=True)
 	bookings = db.relationship('Booking', backref='show', lazy=True)
 

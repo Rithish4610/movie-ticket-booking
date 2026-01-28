@@ -92,8 +92,9 @@ def add_movie():
         description = request.form['description']
         show_date = request.form['show_date']
         num_shows = int(request.form['num_shows'])
-        ticket_price = request.form['ticket_price']
-        if not title or not show_date or not ticket_price:
+        ticket_price_first = request.form['ticket_price_first']
+        ticket_price_second = request.form['ticket_price_second']
+        if not title or not show_date or not ticket_price_first or not ticket_price_second:
             flash('All fields are required!', 'danger')
             return render_template('add_movie.html')
         movie = Movie(title=title, description=description)
@@ -110,7 +111,8 @@ def add_movie():
             show = Show(
                 movie_id=movie.id,
                 show_time=show_datetime,
-                ticket_price=float(ticket_price)
+                ticket_price_first=float(ticket_price_first),
+                ticket_price_second=float(ticket_price_second)
             )
             db.session.add(show)
         db.session.commit()
