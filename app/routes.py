@@ -1,7 +1,7 @@
 from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from app.models import Movie, Show
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @app.route('/')
 def home():
@@ -10,18 +10,25 @@ def home():
 
 @app.route('/movies')
 def movies():
-    shows = Show.query.join(Movie).order_by(Show.show_time).all()
-    # Structure: {date: {movie_title: [show, ...]}}
+    # Show only available dates
+    shows = Show.query.order_by(Show.show_time).all()
+    dates = sorted(set(show.show_time.strftime('%d %b %Y') for show in shows))
+    return render_template('movies.html', dates=dates)
+
+# Show movies and showtimes for a selected date
+@app.route('/movies/<date_str>')
+def movies_by_date(date_str):
+    # date_str format: 'dd MMM yyyy'
+    shows = Show.query.join(Movie).filter(
+        Show.show_time >= datetime.strptime(date_str, '%d %b %Y'),
+        Show.show_time < datetime.strptime(date_str, '%d %b %Y') + timedelta(days=1)
+    ).order_by(Show.show_time).all()
     from collections import defaultdict, OrderedDict
-    shows_by_date = defaultdict(lambda: defaultdict(list))
+    movies_dict = defaultdict(list)
     for show in shows:
-        date_str = show.show_time.strftime('%d %b %Y')
-        shows_by_date[date_str][show.movie.title].append(show)
-    # Sort dates and movie titles for display
-    shows_by_date = OrderedDict(sorted(shows_by_date.items(), key=lambda x: datetime.strptime(x[0], '%d %b %Y')))
-    for date in shows_by_date:
-        shows_by_date[date] = OrderedDict(sorted(shows_by_date[date].items()))
-    return render_template('movies.html', shows_by_date=shows_by_date)
+        movies_dict[show.movie.title].append(show)
+    movies_dict = OrderedDict(sorted(movies_dict.items()))
+    return render_template('movies_by_date.html', date=date_str, movies_dict=movies_dict)
 
 # Admin route to add a new movie
 @app.route('/admin/add_movie', methods=['GET', 'POST'])

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies by Date | Movie Ticket Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #181c24; color: #fff; margin: 0; }
+        .container { max-width: 700px; margin: 60px auto; background: #232a34; border-radius: 12px; box-shadow: 0 4px 24px #0003; padding: 32px; }
+        h2 { color: #ffb347; text-align: center; }
+        .movie { background: #2d3642; border-radius: 8px; padding: 18px 24px; margin-bottom: 18px; }
+        .movie-title { font-size: 1.3em; color: #ffb347; }
+        .showtimes { margin-top: 8px; color: #b3e6ff; }
+        a { color: #ffb347; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Movies on {{ date }}</h2>
+        <a href="/movies">&#8592; Back to Dates</a>
+        {% if movies_dict %}
+            {% for movie_title, shows in movies_dict.items() %}
+                <div class="movie">
+                    <div class="movie-title">{{ movie_title }}</div>
+                    <div class="showtimes">
+                        {% for show in shows %}
+                            <span style="margin-right:18px;">{{ show.show_time.strftime('%I:%M %p') }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No shows available for this date.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
