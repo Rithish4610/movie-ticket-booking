@@ -1,7 +1,31 @@
+
 from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from app.models import Movie, Show
 from datetime import datetime, timedelta
+
+# Booking route for a show
+@app.route('/book/<int:show_id>', methods=['GET', 'POST'])
+def book_show(show_id):
+    show = Show.query.get_or_404(show_id)
+    movie = show.movie
+    # For demo: assume 40 seats, 8 per row, seat numbers A1-A8, B1-B8, ...
+    rows = ['A','B','C','D','E']
+    seats_per_row = 8
+    all_seats = [f"{row}{num}" for row in rows for num in range(1, seats_per_row+1)]
+    # Get booked seats for this show
+    booked_seats = set(seat.seat_number for seat in show.seats if seat.is_booked)
+    if request.method == 'POST':
+        selected_seats = request.form.getlist('seats')
+        # Book selected seats (demo: no user logic)
+        for seat_num in selected_seats:
+            seat = next((s for s in show.seats if s.seat_number == seat_num), None)
+            if seat and not seat.is_booked:
+                seat.is_booked = True
+        db.session.commit()
+        flash(f"Seats booked: {', '.join(selected_seats)}", 'success')
+        return redirect(url_for('book_show', show_id=show_id))
+    return render_template('book_show.html', show=show, movie=movie, all_seats=all_seats, booked_seats=booked_seats)
 
 @app.route('/')
 def home():

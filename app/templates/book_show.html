@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Seats | Movie Ticket Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #181c24; color: #fff; margin: 0; }
+        .container { max-width: 700px; margin: 60px auto; background: #232a34; border-radius: 12px; box-shadow: 0 4px 24px #0003; padding: 32px; }
+        h2 { color: #ffb347; text-align: center; }
+        .screen { background: #ffb347; color: #232a34; text-align: center; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-weight: bold; }
+        .seats { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .row { display: flex; gap: 10px; margin-bottom: 8px; }
+        .seat { width: 36px; height: 36px; background: #2d3642; border: 2px solid #b3e6ff; border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
+        .seat.booked { background: #ff4c4c; border-color: #ff4c4c; cursor: not-allowed; }
+        .seat.selected { background: #ffb347; color: #232a34; border-color: #ffb347; }
+        .legend { margin: 18px 0; text-align: center; }
+        .legend span { display: inline-block; margin: 0 12px; }
+        button { background: #ffb347; color: #232a34; border: none; padding: 12px 32px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 24px; }
+        button:hover { background: #ff8800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Book Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#b3e6ff;">{{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
+        <div class="screen">Theater Screen</div>
+        <form method="POST" id="seats-form">
+            <div class="seats">
+                {% set seat_idx = 0 %}
+                {% for row in ['A','B','C','D','E'] %}
+                <div class="row">
+                    {% for num in range(1,9) %}
+                        {% set seat_num = row ~ num %}
+                        {% set booked = seat_num in booked_seats %}
+                        <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
+                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" {% if booked %}disabled{% endif %}>
+                            {{ seat_num }}
+                        </label>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="legend">
+                <span><span class="seat"></span> Available</span>
+                <span><span class="seat booked"></span> Booked</span>
+                <span><span class="seat selected"></span> Selected</span>
+            </div>
+            <button type="submit">Book Selected Seats</button>
+        </form>
+        <a href="/movies/{{ show.show_time.strftime('%d %b %Y') }}" style="color:#b3e6ff; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
+    </div>
+    <script>
+    // Highlight selected seats
+    document.querySelectorAll('.seat input[type="checkbox"]').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            if (cb.checked) {
+                cb.parentElement.classList.add('selected');
+            } else {
+                cb.parentElement.classList.remove('selected');
+            }
+        });
+    });
+    </script>
+</body>
+</html>
