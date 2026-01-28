@@ -1,4 +1,6 @@
-# Models for Movie, Show, Seat, User, Booking
+
+
+# Models for Movie, Show, Seat, User, Booking (Single Theater: BatVerse Cinema)
 from app import db
 from datetime import datetime
 
@@ -19,6 +21,7 @@ class Show(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
 	show_time = db.Column(db.DateTime, nullable=False)
+	ticket_price = db.Column(db.Float, nullable=False)
 	seats = db.relationship('Seat', backref='show', lazy=True)
 	bookings = db.relationship('Booking', backref='show', lazy=True)
 

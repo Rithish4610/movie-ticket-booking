@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies | Movie Ticket Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #181c24; color: #fff; margin: 0; }
+        .container { max-width: 700px; margin: 60px auto; background: #232a34; border-radius: 12px; box-shadow: 0 4px 24px #0003; padding: 32px; }
+        h2 { color: #ffb347; text-align: center; }
+        .movie-list { margin-top: 30px; }
+        .movie { background: #2d3642; border-radius: 8px; padding: 18px 24px; margin-bottom: 18px; }
+        .movie-title { font-size: 1.3em; color: #ffb347; }
+        .movie-desc { color: #ccc; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Now Showing</h2>
+        <div class="movie-list">
+            {% if shows_by_date %}
+                {% for date, movies in shows_by_date.items() %}
+                    <div class="movie" style="background:#232a34;">
+                        <div style="font-size:1.1em; color:#ffb347; font-weight:bold; margin-bottom:8px;">{{ date }}</div>
+                        {% for movie_title, shows in movies.items() %}
+                            <div class="movie-title" style="margin-top:10px;">{{ movie_title }}</div>
+                            <div style="margin-bottom:8px; color:#b3e6ff;">
+                                {% for show in shows %}
+                                    <span style="margin-right:18px;">{{ show.show_time.strftime('%I:%M %p') }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No shows available. Please check back later.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
