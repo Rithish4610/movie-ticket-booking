@@ -25,6 +25,14 @@
         <h2>Book Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#b3e6ff;">{{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
         <div class="screen">Theater Screen</div>
         <form method="POST" id="seats-form">
+            <div style="text-align:right; margin-bottom:12px;">
+                <label for="num_seats" style="color:#b3e6ff; font-weight:bold;">No. of Seats:</label>
+                <select id="num_seats" name="num_seats" style="padding:4px 10px; border-radius:4px;">
+                    {% for i in range(1,6) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="seats">
                 <div style="width:100%; text-align:left; margin-bottom:6px; color:#ffb347; font-weight:bold;">
                     First Class - ₹{{ '%.2f'|format(show.ticket_price_first) }}
@@ -66,17 +74,39 @@
         </form>
         <a href="/movies/{{ show.show_time.strftime('%d %b %Y') }}" style="color:#b3e6ff; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
     </div>
-    <script>
-    // Highlight selected seats
-    document.querySelectorAll('.seat input[type="checkbox"]').forEach(function(cb) {
-        cb.addEventListener('change', function() {
-            if (cb.checked) {
-                cb.parentElement.classList.add('selected');
-            } else {
-                cb.parentElement.classList.remove('selected');
-            }
+        <script>
+        // Highlight selected seats
+        document.querySelectorAll('.seat input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                if (cb.checked) {
+                    cb.parentElement.classList.add('selected');
+                } else {
+                    cb.parentElement.classList.remove('selected');
+                }
+            });
         });
-    });
-    </script>
+        // Limit seat selection to chosen number
+        const numSeatsSelect = document.getElementById('num_seats');
+        const seatCheckboxes = document.querySelectorAll('.seat input[type="checkbox"]');
+        function enforceSeatLimit() {
+            const maxSeats = parseInt(numSeatsSelect.value);
+            let checked = 0;
+            seatCheckboxes.forEach(cb => {
+                if (cb.checked) checked++;
+            });
+            seatCheckboxes.forEach(cb => {
+                if (!cb.checked) cb.disabled = (checked >= maxSeats) || cb.classList?.contains('booked');
+                else cb.disabled = false;
+            });
+        }
+        numSeatsSelect.addEventListener('change', function() {
+            seatCheckboxes.forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('selected'); });
+            enforceSeatLimit();
+        });
+        seatCheckboxes.forEach(cb => {
+            cb.addEventListener('change', enforceSeatLimit);
+        });
+        window.addEventListener('DOMContentLoaded', enforceSeatLimit);
+        </script>
 </body>
 </html>
