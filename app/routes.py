@@ -36,22 +36,30 @@ def add_movie():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        show_time = request.form['show_time']
+        show_date = request.form['show_date']
+        num_shows = int(request.form['num_shows'])
         ticket_price = request.form['ticket_price']
-        if not title or not show_time or not ticket_price:
+        if not title or not show_date or not ticket_price:
             flash('All fields are required!', 'danger')
             return render_template('add_movie.html')
         movie = Movie(title=title, description=description)
         db.session.add(movie)
         db.session.commit()
-        # Add show for this movie
-        show = Show(
-            movie_id=movie.id,
-            show_time=datetime.strptime(show_time, '%Y-%m-%dT%H:%M'),
-            ticket_price=float(ticket_price)
-        )
-        db.session.add(show)
+        # Add multiple shows for this movie
+        for i in range(1, num_shows + 1):
+            show_time_str = request.form.get(f'show_time_{i}')
+            if not show_time_str:
+                continue
+            # Combine date and time
+            dt_str = f"{show_date} {show_time_str}"
+            show_datetime = datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
+            show = Show(
+                movie_id=movie.id,
+                show_time=show_datetime,
+                ticket_price=float(ticket_price)
+            )
+            db.session.add(show)
         db.session.commit()
-        flash('Movie and show added successfully!', 'success')
+        flash('Movie and shows added successfully!', 'success')
         return redirect(url_for('add_movie'))
     return render_template('add_movie.html')
