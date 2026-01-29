@@ -19,7 +19,7 @@
     <div class="container">
         <h2>Enter Your Information</h2>
         <div class="seats-list">
-            <strong>Selected Seats:</strong> {{ selected_seats|join(', ') }}<br>
+            <strong>Selected Seats:</strong> {{ seat_display_str }}<br>
             <strong>Movie:</strong> {{ movie.title }}<br>
             <strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}
         </div>

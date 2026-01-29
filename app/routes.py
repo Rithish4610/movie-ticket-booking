@@ -36,17 +36,32 @@ def user_info():
         return redirect(url_for('movies'))
     show = Show.query.get_or_404(show_id)
     movie = show.movie
+    # Determine class for each selected seat
+    # Group seats by class for display
+    class_map = {'First Class': [], 'Second Class': []}
+    for seat in selected_seats:
+        if seat[0] in ['A', 'B']:
+            class_map['First Class'].append(seat)
+        else:
+            class_map['Second Class'].append(seat)
+    # Prepare display string(s)
+    seat_display = []
+    if class_map['First Class']:
+        seat_display.append(f"{','.join(class_map['First Class'])} (First Class)")
+    if class_map['Second Class']:
+        seat_display.append(f"{','.join(class_map['Second Class'])} (Second Class)")
+    seat_display_str = ', '.join(seat_display)
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
         if not name or not email or not phone:
             flash('Please fill in all fields.', 'danger')
-            return render_template('user_info.html', show=show, movie=movie, selected_seats=selected_seats)
+            return render_template('user_info.html', show=show, movie=movie, seat_display_str=seat_display_str)
         # Store user info in session and proceed to payment (to be implemented)
         session['user_info'] = {'name': name, 'email': email, 'phone': phone}
         return redirect(url_for('payment'))
-    return render_template('user_info.html', show=show, movie=movie, selected_seats=selected_seats)
+    return render_template('user_info.html', show=show, movie=movie, seat_display_str=seat_display_str)
 @app.route('/')
 def home():
     return render_template('home.html')
