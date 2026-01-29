@@ -51,10 +51,10 @@
         </div>
         <div class="movie-list">
             {% if dates %}
-                <h3 style="color:#b3e6ff; text-align:center;">Select a Date</h3>
+                <h3 style="color:#3b82f6; text-align:center;">Select a Date</h3>
                 {% for date in dates %}
-                    <div class="movie" style="background:#232a34; text-align:center;">
-                        <a href="/movies/{{ date }}" style="font-size:1.1em; color:#ffb347; font-weight:bold;">{{ date }}</a>
+                    <div class="movie" style="text-align:center;">
+                        <a href="/movies/{{ date }}" style="font-size:1.1em; color:#3b82f6; font-weight:bold;">{{ date }}</a>
                     </div>
                 {% endfor %}
             {% else %}
