@@ -1,6 +1,6 @@
 
 from app import app, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, session
 from app.models import Movie, Show
 from datetime import datetime, timedelta
 
@@ -17,16 +17,36 @@ def book_show(show_id):
     booked_seats = set(seat.seat_number for seat in show.seats if seat.is_booked)
     if request.method == 'POST':
         selected_seats = request.form.getlist('seats')
-        # Book selected seats (demo: no user logic)
-        for seat_num in selected_seats:
-            seat = next((s for s in show.seats if s.seat_number == seat_num), None)
-            if seat and not seat.is_booked:
-                seat.is_booked = True
-        db.session.commit()
-        flash(f"Seats booked: {', '.join(selected_seats)}", 'success')
-        return redirect(url_for('book_show', show_id=show_id))
+        if not selected_seats:
+            flash('Please select at least one seat.', 'danger')
+            return redirect(url_for('book_show', show_id=show_id))
+        # Store selected seats in session and redirect to user info form
+        session['selected_seats'] = selected_seats
+        session['show_id'] = show_id
+        return redirect(url_for('user_info'))
     return render_template('book_show.html', show=show, movie=movie, all_seats=all_seats, booked_seats=booked_seats)
 
+# Step 2: User info form after seat selection
+@app.route('/user_info', methods=['GET', 'POST'])
+def user_info():
+    selected_seats = session.get('selected_seats')
+    show_id = session.get('show_id')
+    if not selected_seats or not show_id:
+        flash('Please select seats first.', 'danger')
+        return redirect(url_for('movies'))
+    show = Show.query.get_or_404(show_id)
+    movie = show.movie
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        if not name or not email or not phone:
+            flash('Please fill in all fields.', 'danger')
+            return render_template('user_info.html', show=show, movie=movie, selected_seats=selected_seats)
+        # Store user info in session and proceed to payment (to be implemented)
+        session['user_info'] = {'name': name, 'email': email, 'phone': phone}
+        return redirect(url_for('payment'))
+    return render_template('user_info.html', show=show, movie=movie, selected_seats=selected_seats)
 @app.route('/')
 def home():
     return render_template('home.html')
