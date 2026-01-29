@@ -45,6 +45,25 @@
         a:hover {
             text-decoration: underline;
         }
+        .showtime-box {
+            display: inline-block;
+            background: #e3eaff;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: bold;
+            color: #3b82f6;
+            min-width: 90px;
+            text-align: center;
+            box-shadow: 0 2px 8px #b3c6e066;
+            cursor: pointer;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .showtime-box:hover, .showtime-box:focus {
+            box-shadow: 0 0 16px 4px #3b82f6cc, 0 2px 8px #b3c6e066;
+            border-color: #2563eb;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +77,7 @@
                     <div class="showtimes" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;">
                         {% for show in shows %}
                             <a href="/book/{{ show.id }}" style="text-decoration:none;">
-                                <span style="display:inline-block; background:#e3eaff; border:2px solid #3b82f6; border-radius:8px; padding:8px 18px; font-weight:bold; color:#3b82f6; min-width:90px; text-align:center; box-shadow:0 2px 8px #b3c6e066; cursor:pointer;">{{ show.show_time.strftime('%I:%M %p') }}</span>
+                                <span class="showtime-box" tabindex="0">{{ show.show_time.strftime('%I:%M %p') }}</span>
                             </a>
                         {% endfor %}
                     </div>
