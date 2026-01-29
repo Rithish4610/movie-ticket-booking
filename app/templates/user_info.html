@@ -5,14 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Information | Movie Ticket Booking</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #181c24; color: #fff; margin: 0; }
-        .container { max-width: 500px; margin: 60px auto; background: #232a34; border-radius: 12px; box-shadow: 0 4px 24px #0003; padding: 32px; }
-        h2 { color: #ffb347; text-align: center; }
-        label { display: block; margin: 18px 0 6px; color: #b3e6ff; font-weight: bold; }
-        input[type="text"], input[type="email"], input[type="tel"] { width: 100%; padding: 10px; border-radius: 6px; border: none; margin-bottom: 16px; }
-        button { background: #ffb347; color: #232a34; border: none; padding: 12px 32px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; width: 100%; }
-        button:hover { background: #ff8800; }
-        .seats-list { color: #b3e6ff; margin-bottom: 18px; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fdf6f0;
+            color: #222;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #f7c8e0aa;
+            padding: 40px 32px 32px 32px;
+        }
+        h2 {
+            color: #e75480;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 18px 0 6px;
+            color: #a78bfa;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #fce4ec;
+            margin-bottom: 16px;
+            background: #fce4ec;
+            color: #222;
+        }
+        button {
+            background: linear-gradient(90deg, #e75480 0%, #a7e9af 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            font-size: 1.1em;
+            box-shadow: 0 2px 8px #f7c8e066;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #a78bfa 0%, #e75480 100%);
+        }
+        .seats-list {
+            color: #a78bfa;
+            margin-bottom: 18px;
+        }
     </style>
 </head>
 <body>
