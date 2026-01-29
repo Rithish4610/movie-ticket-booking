@@ -1,5 +1,5 @@
 
-from app import app, db
+from app import app, d
 from flask import render_template, request, redirect, url_for, flash, session
 from app.models import Movie, Show
 from datetime import datetime, timedelta
