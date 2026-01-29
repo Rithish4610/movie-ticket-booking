@@ -5,19 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Seats | Movie Ticket Booking</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #181c24; color: #fff; margin: 0; }
-        .container { max-width: 700px; margin: 60px auto; background: #232a34; border-radius: 12px; box-shadow: 0 4px 24px #0003; padding: 32px; }
-        h2 { color: #ffb347; text-align: center; }
-        .screen { background: #ffb347; color: #232a34; text-align: center; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-weight: bold; }
-        .seats { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .row { display: flex; gap: 10px; margin-bottom: 8px; }
-        .seat { width: 36px; height: 36px; background: #2d3642; border: 2px solid #b3e6ff; border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
-        .seat.booked { background: #ff4c4c; border-color: #ff4c4c; cursor: not-allowed; }
-        .seat.selected { background: #ffb347; color: #232a34; border-color: #ffb347; }
-        .legend { margin: 18px 0; text-align: center; }
-        .legend span { display: inline-block; margin: 0 12px; }
-        button { background: #ffb347; color: #232a34; border: none; padding: 12px 32px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 24px; }
-        button:hover { background: #ff8800; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f6f8fc;
+            color: #222;
+            margin: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px #b3c6e0aa;
+            padding: 36px 32px 32px 32px;
+        }
+        h2 {
+            color: #3b82f6;
+            text-align: center;
+        }
+        .screen {
+            background: linear-gradient(90deg, #a7e9af 0%, #f9f871 100%);
+            color: #222;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px #e0e7ef66;
+        }
+        .seats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .seat {
+            width: 38px;
+            height: 38px;
+            background: #e3eaff;
+            border: 2px solid #90cdf4;
+            border-radius: 10px;
+            color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+        }
+        .seat.booked {
+            background: #fca5a5;
+            border-color: #f87171;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        .seat.selected {
+            background: #f9f871;
+            color: #222;
+            border-color: #facc15;
+        }
+        .legend {
+            margin: 18px 0;
+            text-align: center;
+        }
+        .legend span {
+            display: inline-block;
+            margin: 0 12px;
+        }
+        button {
+            background: linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            margin-top: 24px;
+            font-size: 1.1em;
+            box-shadow: 0 2px 8px #b3c6e066;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #2563eb 0%, #7ed957 100%);
+            color: #fff;
+        }
+        #total-amount {
+            background: #e3eaff;
+            color: #2563eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #b3c6e066;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
