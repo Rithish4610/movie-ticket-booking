@@ -43,7 +43,7 @@
                         {% set seat_num = row ~ num %}
                         {% set booked = seat_num in booked_seats %}
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
-                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" {% if booked %}disabled{% endif %}>
+                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="first" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
                         </label>
                     {% endfor %}
@@ -58,13 +58,14 @@
                         {% set seat_num = row ~ num %}
                         {% set booked = seat_num in booked_seats %}
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
-                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" {% if booked %}disabled{% endif %}>
+                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="second" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
                         </label>
                     {% endfor %}
                 </div>
                 {% endfor %}
             </div>
+            <div id="total-amount" style="display:none; text-align:center; margin:18px 0 0; font-size:1.2em; color:#ffb347; font-weight:bold;"></div>
             <div class="legend">
                 <span><span class="seat"></span> Available</span>
                 <span><span class="seat booked"></span> Booked</span>
@@ -83,11 +84,38 @@
                 } else {
                     cb.parentElement.classList.remove('selected');
                 }
+                updateTotalAmount();
             });
         });
         // Limit seat selection to chosen number
         const numSeatsSelect = document.getElementById('num_seats');
         const seatCheckboxes = document.querySelectorAll('.seat input[type="checkbox"]');
+        const totalAmountDiv = document.getElementById('total-amount');
+        const priceFirst = {{ show.ticket_price_first|tojson }};
+        const priceSecond = {{ show.ticket_price_second|tojson }};
+
+        function updateTotalAmount() {
+            const maxSeats = parseInt(numSeatsSelect.value);
+            let checked = 0;
+            let total = 0;
+            let selectedSeats = [];
+            seatCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    checked++;
+                    selectedSeats.push(cb.getAttribute('data-seat'));
+                    if (cb.getAttribute('data-class') === 'first') total += priceFirst;
+                    else total += priceSecond;
+                }
+            });
+            if (checked === maxSeats && checked > 0) {
+                totalAmountDiv.style.display = 'block';
+                totalAmountDiv.innerHTML = `Selected Seats: <span style="color:#fff;">${selectedSeats.join(', ')}</span><br>Total Amount: <span style="color:#fff;">₹${total.toFixed(2)}</span>`;
+            } else {
+                totalAmountDiv.style.display = 'none';
+                totalAmountDiv.innerHTML = '';
+            }
+        }
+
         function enforceSeatLimit() {
             const maxSeats = parseInt(numSeatsSelect.value);
             let checked = 0;
@@ -98,6 +126,7 @@
                 if (!cb.checked) cb.disabled = (checked >= maxSeats) || cb.classList?.contains('booked');
                 else cb.disabled = false;
             });
+            updateTotalAmount();
         }
         numSeatsSelect.addEventListener('change', function() {
             seatCheckboxes.forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('selected'); });
