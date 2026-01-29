@@ -154,7 +154,30 @@
                 </div>
                 {% endfor %}
             </div>
-            <div id="total-amount" style="display:none; text-align:center; margin:18px 0 0; font-size:1.2em; color:#ffb347; font-weight:bold;"></div>
+            <div id="total-amount" style="display:none;"></div>
+                    <style>
+                        .amount-box {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f6f8fc;
+                            border: 2px solid #3b82f6;
+                            border-radius: 14px;
+                            box-shadow: 0 2px 12px #b3c6e066;
+                            padding: 22px 32px 18px 32px;
+                            margin: 18px auto 0 auto;
+                            max-width: 350px;
+                            font-size: 1.18em;
+                            font-weight: 500;
+                            color: #2563eb;
+                            transition: box-shadow 0.2s;
+                        }
+                        .amount-box span {
+                            color: #222;
+                            font-weight: bold;
+                        }
+                    </style>
             <div class="legend">
                 <span><span class="seat"></span> Available</span>
                 <span><span class="seat booked"></span> Booked</span>
@@ -198,7 +221,12 @@
             });
             if (checked === maxSeats && checked > 0) {
                 totalAmountDiv.style.display = 'block';
-                totalAmountDiv.innerHTML = `Selected Seats: <span style="color:#fff;">${selectedSeats.join(', ')}</span><br>Total Amount: <span style="color:#fff;">₹${total.toFixed(2)}</span>`;
+                totalAmountDiv.innerHTML = `
+                    <div class="amount-box">
+                        <div>Selected Seats: <span>${selectedSeats.join(', ')}</span></div>
+                        <div style="margin-top:10px;">Total Amount: <span>₹${total.toFixed(2)}</span></div>
+                    </div>
+                `;
             } else {
                 totalAmountDiv.style.display = 'none';
                 totalAmountDiv.innerHTML = '';
