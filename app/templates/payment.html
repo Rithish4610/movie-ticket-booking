@@ -1,38 +1,5 @@
 {% extends 'home.html' %}
 {% block content %}
-<script>
-let timer = 150; // 2 minutes 30 seconds
-function startTimer() {
-    let display = document.getElementById('timer');
-    let payLink = document.getElementById('pay-link');
-    let interval = setInterval(function() {
-        let minutes = Math.floor(timer / 60);
-        let seconds = timer % 60;
-        display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        if (--timer < 0) {
-            clearInterval(interval);
-            if (payLink) payLink.style.pointerEvents = 'none';
-            // Show animated payment cancelled box
-            let cancelBox = document.createElement('div');
-            cancelBox.innerHTML = `
-                <div id="cancel-frame">
-                    <div class="cancel-anim">&#10060;</div>
-                    <div class="cancel-title">Payment Cancelled</div>
-                    <div class="cancel-sub">Try again</div>
-                    <button id="try-again-btn">Try Again</button>
-                </div>
-            `;
-            document.body.appendChild(cancelBox);
-            document.getElementById('content').style.opacity = 0.3;
-            document.getElementById('try-again-btn').onclick = function() {
-                window.location.href = '/user_info';
-            };
-        }
-        }
-    }, 1000);
-}
-window.onload = startTimer;
-</script>
 <style>
     #cancel-frame {
         position: fixed;
@@ -94,7 +61,6 @@ window.onload = startTimer;
 </style>
 <div id="content">
 <h2>Payment Process</h2>
-<p style="color:red;font-weight:bold;">Time left to pay: <span id="timer">2:30</span></p>
 <p><strong>Movie:</strong> {{ movie.title }}</p>
 <p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
 <p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
@@ -114,3 +80,35 @@ window.onload = startTimer;
 </p>
 <!-- Card payment form removed as requested -->
 {% endblock %}
+<script>
+let timer = 150; // 2 minutes 30 seconds
+function startTimer() {
+    let display = document.getElementById('timer');
+    let payLink = document.getElementById('pay-link');
+    let interval = setInterval(function() {
+        let minutes = Math.floor(timer / 60);
+        let seconds = timer % 60;
+        display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        if (--timer < 0) {
+            clearInterval(interval);
+            if (payLink) payLink.style.pointerEvents = 'none';
+            // Show animated payment cancelled box
+            let cancelBox = document.createElement('div');
+            cancelBox.innerHTML = `
+                <div id="cancel-frame">
+                    <div class="cancel-anim">&#10060;</div>
+                    <div class="cancel-title">Payment Cancelled</div>
+                    <div class="cancel-sub">Try again</div>
+                    <button id="try-again-btn">Try Again</button>
+                </div>
+            `;
+            document.body.appendChild(cancelBox);
+            document.getElementById('content').style.opacity = 0.3;
+            document.getElementById('try-again-btn').onclick = function() {
+                window.location.href = '/user_info';
+            };
+        }
+    }, 1000);
+}
+document.addEventListener('DOMContentLoaded', startTimer);
+</script>
