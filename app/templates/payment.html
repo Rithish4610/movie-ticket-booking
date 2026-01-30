@@ -1,6 +1,24 @@
 {% extends 'home.html' %}
 {% block content %}
+<script>
+let timer = 150; // 2 minutes 30 seconds
+function startTimer() {
+    let display = document.getElementById('timer');
+    let interval = setInterval(function() {
+        let minutes = Math.floor(timer / 60);
+        let seconds = timer % 60;
+        display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        if (--timer < 0) {
+            clearInterval(interval);
+            display.textContent = 'Time expired! Please try again.';
+            // Optionally, disable payment button or redirect
+        }
+    }, 1000);
+}
+window.onload = startTimer;
+</script>
 <h2>Payment Process</h2>
+<p style="color:red;font-weight:bold;">Time left to pay: <span id="timer">2:30</span></p>
 <p><strong>Movie:</strong> {{ movie.title }}</p>
 <p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
 <p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
