@@ -46,11 +46,13 @@
 </head>
 <body>
     <div class="container">
+        {% block content %}
         <h1>Welcome to the Online Movie Ticket Booking System!</h1>
         <p>Book your favorite movies, choose your seats, and enjoy the show. Fast, easy, and secure.</p>
         <div class="cta">
             <a href="/movies">View Movies & Book Now</a>
         </div>
+        {% endblock %}
     </div>
 </body>
 </html>

@@ -8,6 +8,13 @@
 <p><strong>Email:</strong> {{ user_info.email }}</p>
 <p><strong>Phone:</strong> {{ user_info.phone }}</p>
 <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
+<p>
+    <strong>Pay via GPay:</strong><br>
+    <a href="upi://pay?pa=9363613681@okicici&pn=Movie%20Booking&am={{ total_price }}&cu=INR" target="_blank" style="color:blue;font-weight:bold;">
+        Click here to pay ₹{{ total_price }} to GPay 9363613681
+    </a>
+    <br><small>Or scan the QR in your GPay app and pay to 9363613681</small>
+</p>
 <form method="post">
     <div>
         <label>Card Number</label>
