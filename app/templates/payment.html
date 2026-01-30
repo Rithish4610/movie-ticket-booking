@@ -9,42 +9,72 @@
         background: #fff;
         border: 3px solid #e74c3c;
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
         padding: 40px 32px 32px 32px;
         z-index: 9999;
         text-align: center;
         min-width: 320px;
-        animation: popin 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+        animation: popin 0.5s cubic-bezier(.68, -0.55, .27, 1.55);
     }
+
     @keyframes popin {
-        0% { transform: scale(0.7) translate(-50%, -50%); opacity: 0; }
-        100% { transform: scale(1) translate(-50%, -50%); opacity: 1; }
+        0% {
+            transform: scale(0.7) translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        100% {
+            transform: scale(1) translate(-50%, -50%);
+            opacity: 1;
+        }
     }
+
     .cancel-anim {
         font-size: 48px;
         color: #e74c3c;
         margin-bottom: 12px;
         animation: shake 0.7s;
     }
+
     @keyframes shake {
-        0% { transform: translateX(0); }
-        20% { transform: translateX(-8px); }
-        40% { transform: translateX(8px); }
-        60% { transform: translateX(-8px); }
-        80% { transform: translateX(8px); }
-        100% { transform: translateX(0); }
+        0% {
+            transform: translateX(0);
+        }
+
+        20% {
+            transform: translateX(-8px);
+        }
+
+        40% {
+            transform: translateX(8px);
+        }
+
+        60% {
+            transform: translateX(-8px);
+        }
+
+        80% {
+            transform: translateX(8px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
     }
+
     .cancel-title {
         font-size: 1.6em;
         font-weight: bold;
         color: #e74c3c;
         margin-bottom: 8px;
     }
+
     .cancel-sub {
         font-size: 1.1em;
         color: #555;
         margin-bottom: 18px;
     }
+
     #try-again-btn {
         background: #3498db;
         color: #fff;
@@ -55,60 +85,95 @@
         cursor: pointer;
         transition: background 0.2s;
     }
+
     #try-again-btn:hover {
         background: #217dbb;
     }
 </style>
 <div id="content">
-<h2>Payment Process</h2>
-<p><strong>Movie:</strong> {{ movie.title }}</p>
-<p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
-<p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
-<p><strong>Name:</strong> {{ user_info.name }}</p>
-<p><strong>Email:</strong> {{ user_info.email }}</p>
-<p><strong>Phone:</strong> {{ user_info.phone }}</p>
-<p><strong>Total Price:</strong> ₹{{ total_price }}</p>
-<p>
-    <strong>Pay via UPI:</strong><br>
-    <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
-        Click here to pay the total amount via UPI
-    </a>
-</p>
-<p>
-    <strong>Or scan this QR code to pay:</strong><br>
-    <img src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
-</p>
-<!-- Card payment form removed as requested -->
-{% endblock %}
-<script>
-let timer = 150; // 2 minutes 30 seconds
-function startTimer() {
-    let display = document.getElementById('timer');
-    let payLink = document.getElementById('pay-link');
-    let interval = setInterval(function() {
-        let minutes = Math.floor(timer / 60);
-        let seconds = timer % 60;
-        display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        if (--timer < 0) {
-            clearInterval(interval);
-            if (payLink) payLink.style.pointerEvents = 'none';
-            // Show animated payment cancelled box
-            let cancelBox = document.createElement('div');
-            cancelBox.innerHTML = `
-                <div id="cancel-frame">
-                    <div class="cancel-anim">&#10060;</div>
-                    <div class="cancel-title">Payment Cancelled</div>
-                    <div class="cancel-sub">Try again</div>
-                    <button id="try-again-btn">Try Again</button>
-                </div>
-            `;
-            document.body.appendChild(cancelBox);
-            document.getElementById('content').style.opacity = 0.3;
-            document.getElementById('try-again-btn').onclick = function() {
-                window.location.href = '/user_info';
-            };
+    <h2>Payment Process</h2>
+
+    <style>
+        @keyframes rotate-hourglass {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(180deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-    }, 1000);
-}
-document.addEventListener('DOMContentLoaded', startTimer);
-</script>
+
+        .hourglass {
+            display: inline-block;
+            animation: rotate-hourglass 2s infinite linear;
+            font-size: 1.2em;
+        }
+    </style>
+
+    <div id="timer-container" style="text-align: center; margin-bottom: 20px;">
+        <h3 style="color: #e74c3c;">
+            Time Remaining: <span class="hourglass">⌛</span> <span id="time">120 seconds</span>
+        </h3>
+    </div>
+
+    <p><strong>Movie:</strong> {{ movie.title }}</p>
+    <p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+    <p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
+    <p><strong>Name:</strong> {{ user_info.name }}</p>
+    <p><strong>Email:</strong> {{ user_info.email }}</p>
+    <p><strong>Phone:</strong> {{ user_info.phone }}</p>
+    <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
+    <div id="payment-section">
+        <p>
+            <strong>Pay via UPI:</strong><br>
+            <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
+                Click here to pay the total amount via UPI
+            </a>
+        </p>
+        <p>
+            <strong>Or scan this QR code to pay:</strong><br>
+            <img id="qr-img" src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var duration = 120; // 120 seconds
+            var display = document.querySelector('#time');
+            var timer = duration;
+            var interval = setInterval(function () {
+                display.textContent = timer + " seconds";
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    // Hide payment section
+                    var paymentSection = document.getElementById('payment-section');
+                    if (paymentSection) paymentSection.style.display = 'none';
+                    // Show animated expired box
+                    var expiredBox = document.createElement('div');
+                    expiredBox.innerHTML = `
+                        <div id="cancel-frame">
+                            <div class="cancel-anim">&#9940;</div>
+                            <div class="cancel-title">Payment Expired</div>
+                            <div class="cancel-sub">Your payment session has expired.</div>
+                            <button id="try-again-btn">Retry</button>
+                        </div>
+                    `;
+                    document.body.appendChild(expiredBox);
+                    document.getElementById('content').style.opacity = 0.3;
+                    document.getElementById('cancel-frame').style.opacity = 1;
+                    document.getElementById('try-again-btn').onclick = function() {
+                        window.location.href = '/user_info';
+                    };
+                }
+            }, 1000);
+        });
+    </script>
+    {% endblock %}
+
+
+    <!-- Timer script removed as requested -->
