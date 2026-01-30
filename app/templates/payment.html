@@ -12,38 +12,87 @@ function startTimer() {
         if (--timer < 0) {
             clearInterval(interval);
             if (payLink) payLink.style.pointerEvents = 'none';
-            // Show animated payment cancelled and try again box
+            // Show animated payment cancelled box
             let cancelBox = document.createElement('div');
             cancelBox.innerHTML = `
-                <div id="cancel-anim" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:9999;">
-                    <div style="font-size:2.2rem;color:#e74c3c;font-weight:bold;animation: shake 0.7s;">Payment Cancelled</div>
-                    <div style="margin-top:30px;padding:30px 40px;background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.13);display:flex;flex-direction:column;align-items:center;">
-                        <div style="font-size:1.2rem;color:#333;margin-bottom:18px;">Try again</div>
-                        <button id="try-again-btn" style="padding:12px 32px;font-size:1.1rem;background:#3498db;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;">Try Again</button>
-                    </div>
+                <div id="cancel-frame">
+                    <div class="cancel-anim">&#10060;</div>
+                    <div class="cancel-title">Payment Cancelled</div>
+                    <div class="cancel-sub">Try again</div>
+                    <button id="try-again-btn">Try Again</button>
                 </div>
-                <style>
-                @keyframes shake {
-                  0% { transform: translateX(0); }
-                  20% { transform: translateX(-10px); }
-                  40% { transform: translateX(10px); }
-                  60% { transform: translateX(-10px); }
-                  80% { transform: translateX(10px); }
-                  100% { transform: translateX(0); }
-                }
-                #try-again-btn:hover { background: #217dbb; }
-                </style>
             `;
             document.body.appendChild(cancelBox);
+            document.getElementById('content').style.opacity = 0.3;
             document.getElementById('try-again-btn').onclick = function() {
-                window.location.href = '/book/3';
+                window.location.href = '/user_info';
             };
-            display.textContent = '';
+        }
         }
     }, 1000);
 }
 window.onload = startTimer;
 </script>
+<style>
+    #cancel-frame {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border: 3px solid #e74c3c;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+        padding: 40px 32px 32px 32px;
+        z-index: 9999;
+        text-align: center;
+        min-width: 320px;
+        animation: popin 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes popin {
+        0% { transform: scale(0.7) translate(-50%, -50%); opacity: 0; }
+        100% { transform: scale(1) translate(-50%, -50%); opacity: 1; }
+    }
+    .cancel-anim {
+        font-size: 48px;
+        color: #e74c3c;
+        margin-bottom: 12px;
+        animation: shake 0.7s;
+    }
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(8px); }
+        60% { transform: translateX(-8px); }
+        80% { transform: translateX(8px); }
+        100% { transform: translateX(0); }
+    }
+    .cancel-title {
+        font-size: 1.6em;
+        font-weight: bold;
+        color: #e74c3c;
+        margin-bottom: 8px;
+    }
+    .cancel-sub {
+        font-size: 1.1em;
+        color: #555;
+        margin-bottom: 18px;
+    }
+    #try-again-btn {
+        background: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 28px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    #try-again-btn:hover {
+        background: #217dbb;
+    }
+</style>
+<div id="content">
 <h2>Payment Process</h2>
 <p style="color:red;font-weight:bold;">Time left to pay: <span id="timer">2:30</span></p>
 <p><strong>Movie:</strong> {{ movie.title }}</p>
