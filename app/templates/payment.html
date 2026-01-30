@@ -138,22 +138,31 @@
         <strong>Or scan this QR code to pay:</strong><br>
         <img src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
     </p>
+    <p style="color:gray; font-size:0.95em;">After payment, your ticket will be confirmed automatically.</p>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var duration = 120; // 120 seconds
             var display = document.querySelector('#time');
-
             var timer = duration;
             var interval = setInterval(function () {
                 display.textContent = timer + " seconds";
-
                 if (--timer < 0) {
                     clearInterval(interval);
                     alert("Time Expired! Please try again.");
                     window.location.href = "{{ url_for('movies') }}";
                 }
             }, 1000);
+
+            // Poll for payment status every 3 seconds
+            var paymentPoll = setInterval(function() {
+                fetch('/payment_status').then(r => r.json()).then(data => {
+                    if (data.paid) {
+                        clearInterval(paymentPoll);
+                        window.location.reload(); // Will show confirmation page
+                    }
+                });
+            }, 3000);
         });
     </script>
     {% endblock %}

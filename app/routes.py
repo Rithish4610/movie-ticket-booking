@@ -3,6 +3,21 @@ from app import app, db
 from flask import render_template, request, redirect, url_for, flash, session
 from app.models import Movie, Show
 from datetime import datetime, timedelta
+from flask import jsonify
+
+# Simulated payment status (for demo)
+payment_status = {'paid': False}
+
+# Endpoint to simulate payment completion (for demo/testing only)
+@app.route('/simulate_payment', methods=['POST'])
+def simulate_payment():
+    payment_status['paid'] = True
+    return jsonify({'status': 'ok'})
+
+# Endpoint to check payment status (AJAX polling)
+@app.route('/payment_status')
+def payment_status_check():
+    return jsonify({'paid': payment_status['paid']})
 
 # Payment route after user info
 @app.route('/payment', methods=['GET', 'POST'])
