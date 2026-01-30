@@ -4,14 +4,41 @@
 let timer = 150; // 2 minutes 30 seconds
 function startTimer() {
     let display = document.getElementById('timer');
+    let payLink = document.getElementById('pay-link');
     let interval = setInterval(function() {
         let minutes = Math.floor(timer / 60);
         let seconds = timer % 60;
         display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         if (--timer < 0) {
             clearInterval(interval);
-            display.textContent = 'Time expired! Please try again.';
-            // Optionally, disable payment button or redirect
+            if (payLink) payLink.style.pointerEvents = 'none';
+            // Show animated payment cancelled and try again box
+            let cancelBox = document.createElement('div');
+            cancelBox.innerHTML = `
+                <div id="cancel-anim" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:9999;">
+                    <div style="font-size:2.2rem;color:#e74c3c;font-weight:bold;animation: shake 0.7s;">Payment Cancelled</div>
+                    <div style="margin-top:30px;padding:30px 40px;background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.13);display:flex;flex-direction:column;align-items:center;">
+                        <div style="font-size:1.2rem;color:#333;margin-bottom:18px;">Try again</div>
+                        <button id="try-again-btn" style="padding:12px 32px;font-size:1.1rem;background:#3498db;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background 0.2s;">Try Again</button>
+                    </div>
+                </div>
+                <style>
+                @keyframes shake {
+                  0% { transform: translateX(0); }
+                  20% { transform: translateX(-10px); }
+                  40% { transform: translateX(10px); }
+                  60% { transform: translateX(-10px); }
+                  80% { transform: translateX(10px); }
+                  100% { transform: translateX(0); }
+                }
+                #try-again-btn:hover { background: #217dbb; }
+                </style>
+            `;
+            document.body.appendChild(cancelBox);
+            document.getElementById('try-again-btn').onclick = function() {
+                window.location.href = '/book/3';
+            };
+            display.textContent = '';
         }
     }, 1000);
 }
@@ -28,7 +55,7 @@ window.onload = startTimer;
 <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
 <p>
     <strong>Pay via UPI:</strong><br>
-    <a href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
+    <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
         Click here to pay the total amount via UPI
     </a>
 </p>
