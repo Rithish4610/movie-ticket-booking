@@ -21,6 +21,21 @@ def payment():
             total_price += show.ticket_price_first
         else:
             total_price += show.ticket_price_second
+    # Generate UPI payment URL and QR code
+    upi_id = "9363613681@ptyes"
+    upi_payee = "Movie Booking"
+    upi_url = f"upi://pay?pa={upi_id}&pn={upi_payee.replace(' ', '%20')}&am={total_price}&cu=INR"
+
+    # Generate QR code image as base64
+    import qrcode
+    import io
+    import base64
+    qr = qrcode.make(upi_url)
+    buf = io.BytesIO()
+    qr.save(buf, format='PNG')
+    qr_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    qr_data_url = f"data:image/png;base64,{qr_b64}"
+
     if request.method == 'POST':
         # Simulate payment processing (in real app, integrate payment gateway)
         # Mark seats as booked
@@ -31,7 +46,7 @@ def payment():
         flash('Payment successful! Your seats are booked.', 'success')
         # Optionally clear session or keep for confirmation page
         return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
-    return render_template('payment.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
+    return render_template('payment.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price, upi_url=upi_url, qr_data_url=qr_data_url)
 
 # Booking route for a show
 @app.route('/book/<int:show_id>', methods=['GET', 'POST'])

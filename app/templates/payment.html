@@ -10,13 +10,13 @@
 <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
 <p>
     <strong>Pay via UPI:</strong><br>
-    <a href="upi://pay?pa=9363613681@ptyes&pn=Movie%20Booking&am={{ total_price }}&cu=INR" target="_blank" style="color:blue;font-weight:bold;">
+    <a href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
         Click here to pay the total amount via UPI
     </a>
 </p>
 <p>
     <strong>Or scan this QR code to pay:</strong><br>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=9363613681@ptyes&pn=Movie%20Booking&am={{ total_price }}&cu=INR&size=200x200" alt="UPI QR Code" width="200" height="200">
+    <img src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
 </p>
 <!-- Card payment form removed as requested -->
 {% endblock %}
