@@ -1,0 +1,26 @@
+{% extends 'home.html' %}
+{% block content %}
+<h2>Payment Process</h2>
+<p><strong>Movie:</strong> {{ movie.title }}</p>
+<p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+<p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
+<p><strong>Name:</strong> {{ user_info.name }}</p>
+<p><strong>Email:</strong> {{ user_info.email }}</p>
+<p><strong>Phone:</strong> {{ user_info.phone }}</p>
+<p><strong>Total Price:</strong> ₹{{ total_price }}</p>
+<form method="post">
+    <div>
+        <label>Card Number</label>
+        <input type="text" name="card_number" required maxlength="16" pattern="\d{16}">
+    </div>
+    <div>
+        <label>Expiry Date</label>
+        <input type="text" name="expiry" required placeholder="MM/YY" pattern="\d{2}/\d{2}">
+    </div>
+    <div>
+        <label>CVV</label>
+        <input type="password" name="cvv" required maxlength="3" pattern="\d{3}">
+    </div>
+    <button type="submit">Pay Now</button>
+</form>
+{% endblock %}

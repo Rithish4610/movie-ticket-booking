@@ -4,6 +4,35 @@ from flask import render_template, request, redirect, url_for, flash, session
 from app.models import Movie, Show
 from datetime import datetime, timedelta
 
+# Payment route after user info
+@app.route('/payment', methods=['GET', 'POST'])
+def payment():
+    selected_seats = session.get('selected_seats')
+    show_id = session.get('show_id')
+    user_info = session.get('user_info')
+    if not selected_seats or not show_id or not user_info:
+        flash('Session expired or invalid. Please start again.', 'danger')
+        return redirect(url_for('movies'))
+    show = Show.query.get_or_404(show_id)
+    movie = show.movie
+    total_price = 0
+    for seat in selected_seats:
+        if seat[0] in ['A', 'B']:
+            total_price += show.ticket_price_first
+        else:
+            total_price += show.ticket_price_second
+    if request.method == 'POST':
+        # Simulate payment processing (in real app, integrate payment gateway)
+        # Mark seats as booked
+        for seat in show.seats:
+            if seat.seat_number in selected_seats:
+                seat.is_booked = True
+        db.session.commit()
+        flash('Payment successful! Your seats are booked.', 'success')
+        # Optionally clear session or keep for confirmation page
+        return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
+    return render_template('payment.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
+
 # Booking route for a show
 @app.route('/book/<int:show_id>', methods=['GET', 'POST'])
 def book_show(show_id):

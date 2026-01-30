@@ -1,0 +1,13 @@
+{% extends 'home.html' %}
+{% block content %}
+<h2>Booking Confirmation</h2>
+<p><strong>Movie:</strong> {{ movie.title }}</p>
+<p><strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+<p><strong>Seats:</strong> {{ ', '.join(selected_seats) }}</p>
+<p><strong>Name:</strong> {{ user_info.name }}</p>
+<p><strong>Email:</strong> {{ user_info.email }}</p>
+<p><strong>Phone:</strong> {{ user_info.phone }}</p>
+<p><strong>Total Paid:</strong> ₹{{ total_price }}</p>
+<p style="color:green;font-weight:bold;">Your payment was successful and your seats are booked!</p>
+<a href="{{ url_for('home') }}">Return to Home</a>
+{% endblock %}
