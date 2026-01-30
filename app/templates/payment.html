@@ -128,51 +128,34 @@
     <p><strong>Email:</strong> {{ user_info.email }}</p>
     <p><strong>Phone:</strong> {{ user_info.phone }}</p>
     <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
-    <div id="payment-section">
-        <p>
-            <strong>Pay via UPI:</strong><br>
-            <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
-                Click here to pay the total amount via UPI
-            </a>
-        </p>
-        <p>
-            <strong>Or scan this QR code to pay:</strong><br>
-            <img id="qr-img" src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
-        </p>
-    </div>
+    <p>
+        <strong>Pay via UPI:</strong><br>
+        <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
+            Click here to pay the total amount via UPI
+        </a>
+    </p>
+    <p>
+        <strong>Or scan this QR code to pay:</strong><br>
+        <img src="{{ qr_data_url }}" alt="UPI QR Code" width="200" height="200">
+    </p>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var duration = 120; // 120 seconds
             var display = document.querySelector('#time');
+
             var timer = duration;
             var interval = setInterval(function () {
                 display.textContent = timer + " seconds";
+
                 if (--timer < 0) {
                     clearInterval(interval);
-                    // Hide payment section
-                    var paymentSection = document.getElementById('payment-section');
-                    if (paymentSection) paymentSection.style.display = 'none';
-                    // Show animated expired box
-                    var expiredBox = document.createElement('div');
-                    expiredBox.innerHTML = `
-                        <div id="cancel-frame">
-                            <div class="cancel-anim">&#9940;</div>
-                            <div class="cancel-title">Payment Expired</div>
-                            <div class="cancel-sub">Your payment session has expired.</div>
-                            <button id="try-again-btn">Retry</button>
-                        </div>
-                    `;
-                    document.body.appendChild(expiredBox);
-                    document.getElementById('content').style.opacity = 0.3;
-                    document.getElementById('cancel-frame').style.opacity = 1;
-                    document.getElementById('try-again-btn').onclick = function() {
-                        window.location.href = '/user_info';
-                    };
+                    alert("Time Expired! Please try again.");
+                    window.location.href = "{{ url_for('movies') }}";
                 }
             }, 1000);
         });
-    </script>
+    </script
     {% endblock %}
 
 
