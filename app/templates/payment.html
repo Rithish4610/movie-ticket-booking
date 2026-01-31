@@ -140,26 +140,100 @@
     </p>
     <p style="color:gray; font-size:0.95em;">After payment, your ticket will be confirmed automatically.</p>
 
-    <!-- Simulation Button for Demo -->
-    <div style="margin-top: 20px;">
+    <!-- Payment Confirmation Button -->
+    <div style="margin-top: 25px; text-align: center;">
+        <div style="margin-bottom: 15px;">
+            <input type="text" id="utr-input" placeholder="Enter 12-digit UPI Ref No." maxlength="12"
+                style="padding: 10px; border-radius: 5px; border: 1px solid #bdc3c7; width: 250px; font-size: 16px; text-align: center;">
+            <div id="utr-error" style="color: #e74c3c; font-size: 0.8em; display: none; margin-top: 5px;"></div>
+        </div>
+
         <button id="simulate-btn"
-            style="background: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
-            Simulate Payment Success (Demo)
+            style="background: #95a5a6; color: white; padding: 12px 30px; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: not-allowed; box-shadow: none; transition: all 0.3s ease;"
+            disabled>
+            <span id="btn-text">I have made the payment</span>
+            <span id="btn-spinner" style="display: none;">Verifying UTR... 🔄</span>
         </button>
+        <p style="color: #7f8c8d; margin-top: 10px; font-size: 0.9em;">Enter the Reference Number after paying to
+            confirm.</p>
     </div>
+
     <script>
+        // Validate UTR Input
+        var utrInput = document.getElementById('utr-input');
+        var verifyBtn = document.getElementById('simulate-btn');
+        var errorMsg = document.getElementById('utr-error');
+
+        utrInput.addEventListener('input', function (e) {
+            // Allow only numbers
+            this.value = this.value.replace(/[^0-9]/g, '');
+            var val = this.value;
+
+            if (val.length === 12) {
+                verifyBtn.disabled = false;
+                verifyBtn.style.background = '#27ae60';
+                verifyBtn.style.cursor = 'pointer';
+                verifyBtn.style.boxShadow = '0 4px 15px rgba(39, 174, 96, 0.4)';
+                errorMsg.style.display = 'none';
+            } else {
+                verifyBtn.disabled = true;
+                verifyBtn.style.background = '#95a5a6';
+                verifyBtn.style.cursor = 'not-allowed';
+                verifyBtn.style.boxShadow = 'none';
+                if (val.length > 0) {
+                    errorMsg.innerText = 'Ref No must be 12 digits';
+                    errorMsg.style.display = 'block';
+                } else {
+                    errorMsg.style.display = 'none';
+                }
+            }
+        });
+
         document.getElementById('simulate-btn').addEventListener('click', function () {
-            fetch('/simulate_payment', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'ok') {
-                        var btn = document.getElementById('simulate-btn');
-                        btn.innerText = 'Payment Simulated... processing...';
-                        btn.disabled = true;
-                        btn.style.background = '#95a5a6';
-                    }
+            var btn = document.getElementById('simulate-btn');
+            var btnText = document.getElementById('btn-text');
+            var btnSpinner = document.getElementById('btn-spinner');
+            var utrVal = utrInput.value;
+
+            if (utrVal.length !== 12) return;
+
+            // Show loading state
+            btn.disabled = true;
+            btn.style.background = '#95a5a6';
+            btn.style.cursor = 'not-allowed';
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline';
+
+            // Simulate verification delay (2 seconds)
+            setTimeout(function () {
+                fetch('/simulate_payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ utr: utrVal })
                 })
-                .catch(err => console.error('Error:', err));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            btnSpinner.innerText = 'Verified! ✅';
+                            utrInput.disabled = true;
+                            // Success will be handled by the existing poller
+                        } else {
+                            // Error handler
+                            btn.disabled = false;
+                            btn.style.background = '#e74c3c';
+                            btnText.innerText = 'Invalid UTR';
+                            btnText.style.display = 'inline';
+                            btnSpinner.style.display = 'none';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        btn.disabled = false;
+                        btnText.innerText = 'Network Error';
+                        btnText.style.display = 'inline';
+                        btnSpinner.style.display = 'none';
+                    });
+            }, 2000);
         });
     </script>
 

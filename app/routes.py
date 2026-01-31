@@ -12,6 +12,11 @@ payment_status = {'paid': False}
 # Endpoint to simulate payment completion (for demo/testing only)
 @app.route('/simulate_payment', methods=['POST'])
 def simulate_payment():
+    data = request.json
+    # Basic validation: UTR must be provided and be 12 digits
+    if not data or not data.get('utr') or len(data['utr']) != 12:
+        return jsonify({'status': 'invalid_utr'}), 400
+    
     payment_status['paid'] = True
     return jsonify({'status': 'ok'})
 
@@ -93,8 +98,8 @@ Enjoy your movie.
         session.pop('user_info', None)
         return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
 
-    if request.method == 'POST':
-        return confirm_and_show()
+    # Logic to handle payment confirmation only when status is verified
+
     # If payment_status['paid'] is True, mark seats as booked, send email, and show confirmation
     if payment_status['paid']:
         payment_status['paid'] = False  # Reset for next booking
