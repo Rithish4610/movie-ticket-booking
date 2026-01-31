@@ -134,6 +134,11 @@ def book_show(show_id):
         if not selected_seats:
             flash('Please select at least one seat.', 'danger')
             return redirect(url_for('book_show', show_id=show_id))
+        # Prevent booking of already booked seats
+        overlap = set(selected_seats) & booked_seats
+        if overlap:
+            flash(f"The following seats are already booked and cannot be selected: {', '.join(sorted(overlap))}", 'danger')
+            return redirect(url_for('book_show', show_id=show_id))
         # Store selected seats in session and redirect to user info form
         session['selected_seats'] = selected_seats
         session['show_id'] = show_id
