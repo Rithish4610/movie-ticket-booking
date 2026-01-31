@@ -39,3 +39,8 @@ class Booking(db.Model):
 	seat_id = db.Column(db.Integer, db.ForeignKey('seat.id'), nullable=False)
 	booking_time = db.Column(db.DateTime, default=datetime.utcnow)
 	email_sent = db.Column(db.Boolean, default=False)
+
+class PaymentRecord(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	utr = db.Column(db.String(12), unique=True, nullable=False)
+	timestamp = db.Column(db.DateTime, default=datetime.utcnow)

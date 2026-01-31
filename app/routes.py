@@ -2,7 +2,7 @@
 from app import app, db, mail
 from flask import render_template, request, redirect, url_for, flash, session
 from flask_mail import Message
-from app.models import Movie, Show
+from app.models import Movie, Show, PaymentRecord
 from datetime import datetime, timedelta
 from flask import jsonify
 
@@ -17,6 +17,17 @@ def simulate_payment():
     if not data or not data.get('utr') or len(data['utr']) != 12:
         return jsonify({'status': 'invalid_utr'}), 400
     
+    # Check if UTR is already used
+    utr = data['utr']
+    existing = PaymentRecord.query.filter_by(utr=utr).first()
+    if existing:
+        return jsonify({'status': 'used_utr'}), 400
+    
+    # Valid UTR - Save it to prevent reuse
+    new_record = PaymentRecord(utr=utr)
+    db.session.add(new_record)
+    db.session.commit()
+
     payment_status['paid'] = True
     return jsonify({'status': 'ok'})
 

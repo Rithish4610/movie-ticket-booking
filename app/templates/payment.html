@@ -217,11 +217,17 @@
                             btnSpinner.innerText = 'Verified! ✅';
                             utrInput.disabled = true;
                             // Success will be handled by the existing poller
-                        } else {
-                            // Error handler
+                        } else if (data.status === 'used_utr') {
                             btn.disabled = false;
                             btn.style.background = '#e74c3c';
-                            btnText.innerText = 'Invalid UTR';
+                            btnText.innerText = 'UTR Already Used ⚠️';
+                            btnText.style.display = 'inline';
+                            btnSpinner.style.display = 'none';
+                        } else {
+                            // Generic Error
+                            btn.disabled = false;
+                            btn.style.background = '#e74c3c';
+                            btnText.innerText = 'Invalid UTR ❌';
                             btnText.style.display = 'inline';
                             btnSpinner.style.display = 'none';
                         }
