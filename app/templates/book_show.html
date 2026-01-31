@@ -63,6 +63,22 @@
             border-color: #f87171;
             color: #aaa;
             cursor: not-allowed;
+            position: relative;
+        }
+        .seat .booked-label {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f87171;
+            color: #fff;
+            font-size: 0.75em;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 6px;
+            z-index: 2;
+            pointer-events: none;
+            box-shadow: 0 2px 6px #f8717140;
         }
         .seat.selected {
             background: #7ed957;
@@ -134,7 +150,7 @@
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
                             <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="first" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
-                            {% if booked %}<span style="display:block;font-size:0.7em;color:#f87171;font-weight:bold;">Booked</span>{% endif %}
+                            {% if booked %}<span class="booked-label">Booked</span>{% endif %}
                         </label>
                     {% endfor %}
                 </div>
@@ -150,7 +166,7 @@
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
                             <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="second" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
-                            {% if booked %}<span style="display:block;font-size:0.7em;color:#f87171;font-weight:bold;">Booked</span>{% endif %}
+                            {% if booked %}<span class="booked-label">Booked</span>{% endif %}
                         </label>
                     {% endfor %}
                 </div>
