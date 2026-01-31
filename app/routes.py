@@ -26,7 +26,13 @@ def payment():
     selected_seats = session.get('selected_seats')
     show_id = session.get('show_id')
     user_info = session.get('user_info')
+    print('DEBUG: /payment route called')
+    print('DEBUG: session.selected_seats =', selected_seats)
+    print('DEBUG: session.show_id =', show_id)
+    print('DEBUG: session.user_info =', user_info)
+    print('DEBUG: payment_status["paid"] =', payment_status['paid'])
     if not selected_seats or not show_id or not user_info:
+        print('DEBUG: Session missing, redirecting to movies')
         flash('Session expired or invalid. Please start again.', 'danger')
         return redirect(url_for('movies'))
     show = Show.query.get_or_404(show_id)
@@ -52,8 +58,7 @@ def payment():
     qr_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
     qr_data_url = f"data:image/png;base64,{qr_b64}"
 
-    if request.method == 'POST':
-        # Simulate payment processing (in real app, integrate payment gateway)
+    def confirm_and_show():
         # Mark seats as booked
         for seat in show.seats:
             if seat.seat_number in selected_seats:
@@ -82,38 +87,18 @@ Enjoy your movie.
         except Exception as e:
             print('Email send failed:', e)
         flash('Payment successful! Your seats are booked.', 'success')
+        # Clear session data after confirmation
+        session.pop('selected_seats', None)
+        session.pop('show_id', None)
+        session.pop('user_info', None)
         return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
+
+    if request.method == 'POST':
+        return confirm_and_show()
     # If payment_status['paid'] is True, mark seats as booked, send email, and show confirmation
     if payment_status['paid']:
-        for seat in show.seats:
-            if seat.seat_number in selected_seats:
-                seat.is_booked = True
-        db.session.commit()
         payment_status['paid'] = False  # Reset for next booking
-        # Send confirmation email
-        try:
-            msg = Message(
-                subject='Your Movie Ticket is Booked!',
-                recipients=[user_info['email']],
-                body=f"""
-Dear {user_info['name']},
-
-Your ticket is booked successfully!
-
-Movie: {movie.title}
-Show Time: {show.show_time.strftime('%d %b %Y, %I:%M %p')}
-Seats: {', '.join(selected_seats)}
-Total Paid: ₹{total_price}
-
-Thank you for booking with us!
-Enjoy your movie.
-                """
-            )
-            mail.send(msg)
-        except Exception as e:
-            print('Email send failed:', e)
-        flash('Payment successful! Your seats are booked.', 'success')
-        return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
+        return confirm_and_show()
     return render_template('payment.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price, upi_url=upi_url, qr_data_url=qr_data_url)
 
 # Booking route for a show
