@@ -134,6 +134,7 @@
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
                             <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="first" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
+                            {% if booked %}<span style="display:block;font-size:0.7em;color:#f87171;font-weight:bold;">Booked</span>{% endif %}
                         </label>
                     {% endfor %}
                 </div>
@@ -149,6 +150,7 @@
                         <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
                             <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="second" {% if booked %}disabled{% endif %}>
                             {{ seat_num }}
+                            {% if booked %}<span style="display:block;font-size:0.7em;color:#f87171;font-weight:bold;">Booked</span>{% endif %}
                         </label>
                     {% endfor %}
                 </div>
