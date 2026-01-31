@@ -140,6 +140,29 @@
     </p>
     <p style="color:gray; font-size:0.95em;">After payment, your ticket will be confirmed automatically.</p>
 
+    <!-- Simulation Button for Demo -->
+    <div style="margin-top: 20px;">
+        <button id="simulate-btn"
+            style="background: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+            Simulate Payment Success (Demo)
+        </button>
+    </div>
+    <script>
+        document.getElementById('simulate-btn').addEventListener('click', function () {
+            fetch('/simulate_payment', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        var btn = document.getElementById('simulate-btn');
+                        btn.innerText = 'Payment Simulated... processing...';
+                        btn.disabled = true;
+                        btn.style.background = '#95a5a6';
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var duration = 120; // 120 seconds
@@ -155,7 +178,7 @@
             }, 1000);
 
             // Poll for payment status every 3 seconds
-            var paymentPoll = setInterval(function() {
+            var paymentPoll = setInterval(function () {
                 fetch('/payment_status').then(r => r.json()).then(data => {
                     if (data.paid) {
                         clearInterval(paymentPoll);
