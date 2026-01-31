@@ -13,12 +13,13 @@ payment_status = {'paid': False}
 @app.route('/simulate_payment', methods=['POST'])
 def simulate_payment():
     data = request.json
-    # Basic validation: UTR must be provided and be 12 digits
-    if not data or not data.get('utr') or len(data['utr']) != 12:
-        return jsonify({'status': 'invalid_utr'}), 400
+    utr = data.get('utr')
     
-    # Check if UTR is already used
-    utr = data['utr']
+    # Strict Validation: Must be present, exactly 12 chars, and ALL digits
+    if not utr or len(utr) != 12 or not utr.isdigit():
+        return jsonify({'status': 'invalid_utr_format'}), 400
+    
+    # Check if UTR is already used (Database Check)
     existing = PaymentRecord.query.filter_by(utr=utr).first()
     if existing:
         return jsonify({'status': 'used_utr'}), 400

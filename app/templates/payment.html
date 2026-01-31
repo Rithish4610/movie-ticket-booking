@@ -223,6 +223,12 @@
                             btnText.innerText = 'UTR Already Used ⚠️';
                             btnText.style.display = 'inline';
                             btnSpinner.style.display = 'none';
+                        } else if (data.status === 'invalid_utr_format') {
+                            btn.disabled = false;
+                            btn.style.background = '#e74c3c';
+                            btnText.innerText = 'Format Error ❌';
+                            btnText.style.display = 'inline';
+                            btnSpinner.style.display = 'none';
                         } else {
                             // Generic Error
                             btn.disabled = false;
