@@ -177,7 +177,11 @@ def user_info():
         if not name or not email or not phone:
             flash('Please fill in all fields.', 'danger')
             return render_template('user_info.html', show=show, movie=movie, seat_display_str=seat_display_str)
-        # Store user info in session and proceed to payment (to be implemented)
+        # Phone number validation: must be exactly 10 digits
+        if not phone.isdigit() or len(phone) != 10:
+            flash('Phone Number must be exactly 10 digits.', 'danger')
+            return render_template('user_info.html', show=show, movie=movie, seat_display_str=seat_display_str)
+        # Store user info in session and proceed to payment
         session['user_info'] = {'name': name, 'email': email, 'phone': phone}
         return redirect(url_for('payment'))
     return render_template('user_info.html', show=show, movie=movie, seat_display_str=seat_display_str)
