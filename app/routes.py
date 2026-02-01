@@ -103,7 +103,7 @@ Enjoy your movie.
             mail.send(msg)
         except Exception as e:
             print('Email send failed:', e)
-        flash('Payment successful! Your seats are booked.', 'success')
+        flash('Payment successful! Your Knight Seats are booked.', 'success')
         # Clear session data after confirmation
         session.pop('selected_seats', None)
         session.pop('show_id', None)
@@ -132,12 +132,12 @@ def book_show(show_id):
     if request.method == 'POST':
         selected_seats = request.form.getlist('seats')
         if not selected_seats:
-            flash('Please select at least one seat.', 'danger')
+            flash('Please select at least one Knight Seat.', 'danger')
             return redirect(url_for('book_show', show_id=show_id))
         # Prevent booking of already booked seats
         overlap = set(selected_seats) & booked_seats
         if overlap:
-            flash(f"The following seats are already booked and cannot be selected: {', '.join(sorted(overlap))}", 'danger')
+            flash(f"The following Knight Seats are already booked and cannot be selected: {', '.join(sorted(overlap))}", 'danger')
             return redirect(url_for('book_show', show_id=show_id))
         # Store selected seats in session and redirect to user info form
         session['selected_seats'] = selected_seats
@@ -151,7 +151,7 @@ def user_info():
     selected_seats = session.get('selected_seats')
     show_id = session.get('show_id')
     if not selected_seats or not show_id:
-        flash('Please select seats first.', 'danger')
+        flash('Please select Knight Seats first.', 'danger')
         return redirect(url_for('movies'))
     show = Show.query.get_or_404(show_id)
     movie = show.movie

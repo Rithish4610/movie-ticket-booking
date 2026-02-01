@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Seats | Movie Ticket Booking</title>
+    <title>Book Knight Seats | Movie Ticket Booking</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -11,6 +12,7 @@
             color: #222;
             margin: 0;
         }
+
         .container {
             max-width: 700px;
             margin: 60px auto;
@@ -19,10 +21,12 @@
             box-shadow: 0 4px 24px #b3c6e0aa;
             padding: 40px 32px 32px 32px;
         }
+
         h2 {
             color: #3b82f6;
             text-align: center;
         }
+
         .screen {
             background: #e3eaff;
             color: #222;
@@ -33,17 +37,20 @@
             font-weight: bold;
             box-shadow: 0 2px 8px #b3c6e066;
         }
+
         .seats {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
         }
+
         .row {
             display: flex;
             gap: 10px;
             margin-bottom: 8px;
         }
+
         .seat {
             width: 38px;
             height: 38px;
@@ -58,6 +65,7 @@
             font-weight: bold;
             transition: background 0.2s, color 0.2s, border 0.2s;
         }
+
         .seat.booked {
             background: #fca5a5;
             border-color: #f87171;
@@ -65,6 +73,7 @@
             cursor: not-allowed;
             position: relative;
         }
+
         .seat .booked-label {
             position: absolute;
             top: -22px;
@@ -80,19 +89,23 @@
             pointer-events: none;
             box-shadow: 0 2px 6px #f8717140;
         }
+
         .seat.selected {
             background: #7ed957;
             color: #222;
             border-color: #3b82f6;
         }
+
         .legend {
             margin: 18px 0;
             text-align: center;
         }
+
         .legend span {
             display: inline-block;
             margin: 0 12px;
         }
+
         button {
             background: linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%);
             color: #fff;
@@ -106,32 +119,38 @@
             font-size: 1.1em;
             box-shadow: 0 2px 8px #b3c6e066;
         }
+
         button:hover {
             background: linear-gradient(90deg, #2563eb 0%, #7ed957 100%);
             color: #fff;
         }
+
         #total-amount {
             background: #e3eaff;
             color: #3b82f6;
             border-radius: 8px;
             box-shadow: 0 2px 8px #b3c6e066;
         }
+
         a {
             color: #3b82f6;
             text-decoration: none;
         }
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Book Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#b3e6ff;">{{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
-        <div class="screen">Theater Screen</div>
+        <h2>Book Knight Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#b3e6ff;">{{
+                show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
+        <div class="screen">BatScreens</div>
         <form method="POST" id="seats-form">
             <div style="text-align:right; margin-bottom:12px;">
-                <label for="num_seats" style="color:#b3e6ff; font-weight:bold;">No. of Seats:</label>
+                <label for="num_seats" style="color:#b3e6ff; font-weight:bold;">No. of Knight Seats:</label>
                 <select id="num_seats" name="num_seats" style="padding:4px 10px; border-radius:4px;">
                     {% for i in range(1,6) %}
                     <option value="{{ i }}">{{ i }}</option>
@@ -145,13 +164,14 @@
                 {% for row in ['A','B'] %}
                 <div class="row">
                     {% for num in range(1,9) %}
-                        {% set seat_num = row ~ num %}
-                        {% set booked = seat_num in booked_seats %}
-                        <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
-                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="first" {% if booked %}disabled{% endif %}>
-                            {{ seat_num }}
-                            {% if booked %}<span class="booked-label">Booked</span>{% endif %}
-                        </label>
+                    {% set seat_num = row ~ num %}
+                    {% set booked = seat_num in booked_seats %}
+                    <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
+                        <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;"
+                            data-seat="{{ seat_num }}" data-class="first" {% if booked %}disabled{% endif %}>
+                        {{ seat_num }}
+                        {% if booked %}<span class="booked-label">Booked</span>{% endif %}
+                    </label>
                     {% endfor %}
                 </div>
                 {% endfor %}
@@ -161,54 +181,57 @@
                 {% for row in ['C','D','E'] %}
                 <div class="row">
                     {% for num in range(1,9) %}
-                        {% set seat_num = row ~ num %}
-                        {% set booked = seat_num in booked_seats %}
-                        <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
-                            <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;" data-seat="{{ seat_num }}" data-class="second" {% if booked %}disabled{% endif %}>
-                            {{ seat_num }}
-                            {% if booked %}<span class="booked-label">Booked</span>{% endif %}
-                        </label>
+                    {% set seat_num = row ~ num %}
+                    {% set booked = seat_num in booked_seats %}
+                    <label class="seat{% if booked %} booked{% endif %}" title="{{ seat_num }}">
+                        <input type="checkbox" name="seats" value="{{ seat_num }}" style="display:none;"
+                            data-seat="{{ seat_num }}" data-class="second" {% if booked %}disabled{% endif %}>
+                        {{ seat_num }}
+                        {% if booked %}<span class="booked-label">Booked</span>{% endif %}
+                    </label>
                     {% endfor %}
                 </div>
                 {% endfor %}
             </div>
             <div id="total-amount" style="display:none;"></div>
-                    <style>
-                        .amount-box {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            background: #f6f8fc;
-                            border: 2px solid #3b82f6;
-                            border-radius: 14px;
-                            box-shadow: 0 2px 12px #b3c6e066;
-                            padding: 22px 32px 18px 32px;
-                            margin: 18px auto 0 auto;
-                            max-width: 350px;
-                            font-size: 1.18em;
-                            font-weight: 500;
-                            color: #2563eb;
-                            transition: box-shadow 0.2s;
-                        }
-                        .amount-box span {
-                            color: #222;
-                            font-weight: bold;
-                        }
-                    </style>
+            <style>
+                .amount-box {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    background: #f6f8fc;
+                    border: 2px solid #3b82f6;
+                    border-radius: 14px;
+                    box-shadow: 0 2px 12px #b3c6e066;
+                    padding: 22px 32px 18px 32px;
+                    margin: 18px auto 0 auto;
+                    max-width: 350px;
+                    font-size: 1.18em;
+                    font-weight: 500;
+                    color: #2563eb;
+                    transition: box-shadow 0.2s;
+                }
+
+                .amount-box span {
+                    color: #222;
+                    font-weight: bold;
+                }
+            </style>
             <div class="legend">
                 <span><span class="seat"></span> Available</span>
                 <span><span class="seat booked"></span> Booked</span>
                 <span><span class="seat selected"></span> Selected</span>
             </div>
-            <button type="submit">Book Selected Seats</button>
+            <button type="submit">Book Selected Knight Seats</button>
         </form>
-        <a href="/movies/{{ show.show_time.strftime('%d %b %Y') }}" style="color:#b3e6ff; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
+        <a href="/movies/{{ show.show_time.strftime('%d %b %Y') }}"
+            style="color:#b3e6ff; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
     </div>
-        <script>
+    <script>
         // Highlight selected seats
-        document.querySelectorAll('.seat input[type="checkbox"]').forEach(function(cb) {
-            cb.addEventListener('change', function() {
+        document.querySelectorAll('.seat input[type="checkbox"]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
                 if (cb.checked) {
                     cb.parentElement.classList.add('selected');
                 } else {
@@ -221,8 +244,8 @@
         const numSeatsSelect = document.getElementById('num_seats');
         const seatCheckboxes = document.querySelectorAll('.seat input[type="checkbox"]');
         const totalAmountDiv = document.getElementById('total-amount');
-        const priceFirst = {{ show.ticket_price_first|tojson }};
-        const priceSecond = {{ show.ticket_price_second|tojson }};
+        const priceFirst = {{ show.ticket_price_first| tojson }};
+        const priceSecond = {{ show.ticket_price_second| tojson }};
 
         function updateTotalAmount() {
             const maxSeats = parseInt(numSeatsSelect.value);
@@ -241,7 +264,7 @@
                 totalAmountDiv.style.display = 'block';
                 totalAmountDiv.innerHTML = `
                     <div class="amount-box">
-                        <div>Selected Seats: <span>${selectedSeats.join(', ')}</span></div>
+                        <div>Selected Knight Seats: <span>${selectedSeats.join(', ')}</span></div>
                         <div style="margin-top:10px;">Total Amount: <span>₹${total.toFixed(2)}</span></div>
                     </div>
                 `;
@@ -263,7 +286,7 @@
             });
             updateTotalAmount();
         }
-        numSeatsSelect.addEventListener('change', function() {
+        numSeatsSelect.addEventListener('change', function () {
             seatCheckboxes.forEach(cb => { cb.checked = false; cb.parentElement.classList.remove('selected'); });
             enforceSeatLimit();
         });
@@ -271,6 +294,7 @@
             cb.addEventListener('change', enforceSeatLimit);
         });
         window.addEventListener('DOMContentLoaded', enforceSeatLimit);
-        </script>
+    </script>
 </body>
+
 </html>

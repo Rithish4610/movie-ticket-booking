@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             color: #222;
             margin: 0;
         }
+
         .container {
             max-width: 500px;
             margin: 60px auto;
@@ -19,17 +21,22 @@
             box-shadow: 0 4px 24px #b3c6e0aa;
             padding: 40px 32px 32px 32px;
         }
+
         h2 {
             color: #3b82f6;
             text-align: center;
         }
+
         label {
             display: block;
             margin: 18px 0 6px;
             color: #7b8fa6;
             font-weight: bold;
         }
-        input[type="text"], input[type="email"], input[type="tel"] {
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
@@ -38,6 +45,7 @@
             background: #e3eaff;
             color: #222;
         }
+
         button {
             background: linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%);
             color: #fff;
@@ -51,29 +59,34 @@
             font-size: 1.1em;
             box-shadow: 0 2px 8px #b3c6e066;
         }
+
         button:hover {
             background: linear-gradient(90deg, #2563eb 0%, #7ed957 100%);
         }
+
         .seats-list {
             color: #7b8fa6;
             margin-bottom: 18px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-                <h2>Enter Your Information</h2>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <ul style="list-style:none;padding:0;">
-                            {% for category, message in messages %}
-                                <li style="color: {% if category == 'danger' %}#e53e3e{% else %}#2563eb{% endif %}; font-weight:bold; margin-bottom:10px;">{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
+        <h2>Enter Your Information</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul style="list-style:none;padding:0;">
+            {% for category, message in messages %}
+            <li
+                style="color: {% if category == 'danger' %}#e53e3e{% else %}#2563eb{% endif %}; font-weight:bold; margin-bottom:10px;">
+                {{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         <div class="seats-list">
-            <strong>Selected Seats:</strong> {{ seat_display_str }}<br>
+            <strong>Selected Knight Seats:</strong> {{ seat_display_str }}<br>
             <strong>Movie:</strong> {{ movie.title }}<br>
             <strong>Show Time:</strong> {{ show.show_time.strftime('%d %b %Y, %I:%M %p') }}
         </div>
@@ -88,4 +101,5 @@
         </form>
     </div>
 </body>
+
 </html>
