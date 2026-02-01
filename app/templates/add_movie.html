@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,54 +8,75 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f6f8fc;
-            color: #222;
+            background: #121212;
+            color: #e0e0e0;
             margin: 0;
         }
+
         .container {
             max-width: 500px;
             margin: 60px auto;
-            background: #fff;
+            background: #1e1e1e;
             border-radius: 18px;
-            box-shadow: 0 4px 24px #b3c6e0aa;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
             padding: 40px 32px 32px 32px;
             text-align: center;
+            border: 1px solid #333;
         }
+
         h2 {
-            color: #3b82f6;
+            color: #F5C518;
+            text-shadow: 0 0 10px rgba(245, 197, 24, 0.3);
         }
+
         label {
             display: block;
             margin: 18px 0 6px;
             text-align: left;
-            color: #7b8fa6;
+            color: #ccc;
         }
-        input, textarea {
+
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid #e3eaff;
+            border: 1px solid #555;
             margin-bottom: 16px;
-            background: #e3eaff;
-            color: #222;
-        }
-        button {
-            background: linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%);
+            background: #333;
             color: #fff;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #F5C518;
+            box-shadow: 0 0 8px rgba(245, 197, 24, 0.2);
+        }
+
+        button {
+            background: #F5C518;
+            color: #000;
             border: none;
             padding: 12px 32px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
             font-size: 1.1em;
-            box-shadow: 0 2px 8px #b3c6e066;
+            box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
         }
+
         button:hover {
-            background: linear-gradient(90deg, #2563eb 0%, #7ed957 100%);
+            background: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 197, 24, 0.6);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Add New Movie</h2>
@@ -66,15 +88,15 @@
             <label for="show_date">Show Date</label>
             <input type="date" id="show_date" name="show_date" required>
             <script>
-            // Set min date to today
-            document.addEventListener('DOMContentLoaded', function() {
-                var today = new Date();
-                var yyyy = today.getFullYear();
-                var mm = String(today.getMonth() + 1).padStart(2, '0');
-                var dd = String(today.getDate()).padStart(2, '0');
-                var minDate = yyyy + '-' + mm + '-' + dd;
-                document.getElementById('show_date').setAttribute('min', minDate);
-            });
+                // Set min date to today
+                document.addEventListener('DOMContentLoaded', function () {
+                    var today = new Date();
+                    var yyyy = today.getFullYear();
+                    var mm = String(today.getMonth() + 1).padStart(2, '0');
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var minDate = yyyy + '-' + mm + '-' + dd;
+                    document.getElementById('show_date').setAttribute('min', minDate);
+                });
             </script>
             <label for="num_shows">Number of Shows</label>
             <select id="num_shows" name="num_shows" required>
@@ -91,27 +113,28 @@
             <button type="submit">Add Movie</button>
         </form>
         <script>
-        const numShowsSelect = document.getElementById('num_shows');
-        const showTimesContainer = document.getElementById('show-times-container');
-        function renderShowTimeInputs() {
-            const num = parseInt(numShowsSelect.value);
-            showTimesContainer.innerHTML = '';
-            for (let i = 1; i <= num; i++) {
-                const label = document.createElement('label');
-                label.textContent = `Show ${i} Time`;
-                label.setAttribute('for', `show_time_${i}`);
-                showTimesContainer.appendChild(label);
-                const input = document.createElement('input');
-                input.type = 'time';
-                input.id = `show_time_${i}`;
-                input.name = `show_time_${i}`;
-                input.required = true;
-                showTimesContainer.appendChild(input);
+            const numShowsSelect = document.getElementById('num_shows');
+            const showTimesContainer = document.getElementById('show-times-container');
+            function renderShowTimeInputs() {
+                const num = parseInt(numShowsSelect.value);
+                showTimesContainer.innerHTML = '';
+                for (let i = 1; i <= num; i++) {
+                    const label = document.createElement('label');
+                    label.textContent = `Show ${i} Time`;
+                    label.setAttribute('for', `show_time_${i}`);
+                    showTimesContainer.appendChild(label);
+                    const input = document.createElement('input');
+                    input.type = 'time';
+                    input.id = `show_time_${i}`;
+                    input.name = `show_time_${i}`;
+                    input.required = true;
+                    showTimesContainer.appendChild(input);
+                }
             }
-        }
-        numShowsSelect.addEventListener('change', renderShowTimeInputs);
-        window.addEventListener('DOMContentLoaded', renderShowTimeInputs);
+            numShowsSelect.addEventListener('change', renderShowTimeInputs);
+            window.addEventListener('DOMContentLoaded', renderShowTimeInputs);
         </script>
     </div>
 </body>
+
 </html>

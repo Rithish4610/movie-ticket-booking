@@ -8,23 +8,25 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f6f8fc;
-            color: #222;
+            background: #121212;
+            color: #e0e0e0;
             margin: 0;
         }
 
         .container {
             max-width: 700px;
             margin: 60px auto;
-            background: #fff;
+            background: #1e1e1e;
             border-radius: 18px;
-            box-shadow: 0 4px 24px #b3c6e0aa;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
             padding: 40px 32px 32px 32px;
+            border: 1px solid #333;
         }
 
         h2 {
-            color: #3b82f6;
+            color: #F5C518;
             text-align: center;
+            text-shadow: 0 0 10px rgba(245, 197, 24, 0.3);
         }
 
         .movie-list {
@@ -32,20 +34,21 @@
         }
 
         .movie {
-            background: #e3eaff;
+            background: #2c2c2c;
             border-radius: 10px;
             padding: 18px 24px;
             margin-bottom: 18px;
-            box-shadow: 0 2px 8px #b3c6e066;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid #444;
         }
 
         .movie-title {
             font-size: 1.3em;
-            color: #3b82f6;
+            color: #F5C518;
         }
 
         .movie-desc {
-            color: #7b8fa6;
+            color: #aaa;
             margin-top: 8px;
         }
     </style>
@@ -56,15 +59,15 @@
         <h2>Now in the BatVerse</h2>
         <div style="text-align:right; margin-bottom:18px;">
             <a href="/admin/add_movie"
-                style="background:linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%); color:#fff; padding:10px 22px; border-radius:8px; font-weight:bold; text-decoration:none; box-shadow:0 2px 8px #b3c6e066; transition:background 0.2s;">+
+                style="background:#F5C518; color:#000; padding:10px 22px; border-radius:8px; font-weight:bold; text-decoration:none; box-shadow:0 2px 8px rgba(245,197,24,0.4); transition:all 0.2s;">+
                 Add Movie (Admin)</a>
         </div>
         <div class="movie-list">
             {% if dates %}
-            <h3 style="color:#3b82f6; text-align:center;">Select a Date</h3>
+            <h3 style="color:#F5C518; text-align:center;">Select a Date</h3>
             {% for date in dates %}
             <div class="movie" style="text-align:center;">
-                <a href="/movies/{{ date }}" style="font-size:1.1em; color:#3b82f6; font-weight:bold;">{{ date }}</a>
+                <a href="/movies/{{ date }}" style="font-size:1.1em; color:#F5C518; font-weight:bold;">{{ date }}</a>
             </div>
             {% endfor %}
             {% else %}

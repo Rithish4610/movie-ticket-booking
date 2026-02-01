@@ -8,34 +8,39 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f6f8fc;
-            color: #222;
+            background: #121212;
+            color: #e0e0e0;
             margin: 0;
         }
 
         .container {
             max-width: 700px;
             margin: 60px auto;
-            background: #fff;
+            background: #1e1e1e;
             border-radius: 18px;
-            box-shadow: 0 4px 24px #b3c6e0aa;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
             padding: 40px 32px 32px 32px;
+            border: 1px solid #333;
         }
 
         h2 {
-            color: #3b82f6;
+            color: #F5C518;
             text-align: center;
+            text-shadow: 0 0 10px rgba(245, 197, 24, 0.3);
         }
 
         .screen {
-            background: #e3eaff;
-            color: #222;
+            background: #333;
+            color: #F5C518;
             text-align: center;
             padding: 12px;
             border-radius: 10px;
             margin-bottom: 24px;
             font-weight: bold;
-            box-shadow: 0 2px 8px #b3c6e066;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .seats {
@@ -54,22 +59,27 @@
         .seat {
             width: 38px;
             height: 38px;
-            background: #e3eaff;
-            border: 2px solid #90cdf4;
+            background: #2c2c2c;
+            border: 2px solid #555;
             border-radius: 10px;
-            color: #222;
+            color: #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s, color 0.2s, border 0.2s;
+            transition: all 0.2s;
+        }
+
+        .seat:hover {
+            border-color: #F5C518;
+            box-shadow: 0 0 5px rgba(245, 197, 24, 0.4);
         }
 
         .seat.booked {
-            background: #fca5a5;
-            border-color: #f87171;
-            color: #aaa;
+            background: #4a0000;
+            border-color: #7f1d1d;
+            color: #7f1d1d;
             cursor: not-allowed;
             position: relative;
         }
@@ -79,7 +89,7 @@
             top: -22px;
             left: 50%;
             transform: translateX(-50%);
-            background: #f87171;
+            background: #7f1d1d;
             color: #fff;
             font-size: 0.75em;
             font-weight: bold;
@@ -87,18 +97,20 @@
             border-radius: 6px;
             z-index: 2;
             pointer-events: none;
-            box-shadow: 0 2px 6px #f8717140;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
         .seat.selected {
-            background: #7ed957;
-            color: #222;
-            border-color: #3b82f6;
+            background: #F5C518;
+            color: #000;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(245, 197, 24, 0.6);
         }
 
         .legend {
             margin: 18px 0;
             text-align: center;
+            color: #aaa;
         }
 
         .legend span {
@@ -107,33 +119,34 @@
         }
 
         button {
-            background: linear-gradient(90deg, #3b82f6 0%, #a7e9af 100%);
-            color: #fff;
+            background: #F5C518;
+            color: #000;
             border: none;
             padding: 12px 32px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            transition: all 0.2s;
             margin-top: 24px;
             font-size: 1.1em;
-            box-shadow: 0 2px 8px #b3c6e066;
+            box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
         }
 
         button:hover {
-            background: linear-gradient(90deg, #2563eb 0%, #7ed957 100%);
-            color: #fff;
+            background: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 197, 24, 0.6);
         }
 
         #total-amount {
-            background: #e3eaff;
-            color: #3b82f6;
+            background: #1e1e1e;
+            color: #F5C518;
             border-radius: 8px;
-            box-shadow: 0 2px 8px #b3c6e066;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         a {
-            color: #3b82f6;
+            color: #F5C518;
             text-decoration: none;
         }
 
@@ -145,12 +158,12 @@
 
 <body>
     <div class="container">
-        <h2>Book Knight Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#b3e6ff;">{{
+        <h2>Book Knight Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#aaa;">{{
                 show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
         <div class="screen">BatScreens</div>
         <form method="POST" id="seats-form">
             <div style="text-align:right; margin-bottom:12px;">
-                <label for="num_seats" style="color:#b3e6ff; font-weight:bold;">No. of Knight Seats:</label>
+                <label for="num_seats" style="color:#aaa; font-weight:bold;">No. of Knight Seats:</label>
                 <select id="num_seats" name="num_seats" style="padding:4px 10px; border-radius:4px;">
                     {% for i in range(1,6) %}
                     <option value="{{ i }}">{{ i }}</option>
@@ -158,7 +171,7 @@
                 </select>
             </div>
             <div class="seats">
-                <div style="width:100%; text-align:left; margin-bottom:6px; color:#ffb347; font-weight:bold;">
+                <div style="width:100%; text-align:left; margin-bottom:6px; color:#F5C518; font-weight:bold;">
                     First Class - ₹{{ '%.2f'|format(show.ticket_price_first) }}
                 </div>
                 {% for row in ['A','B'] %}
@@ -175,7 +188,7 @@
                     {% endfor %}
                 </div>
                 {% endfor %}
-                <div style="width:100%; text-align:left; margin:18px 0 6px; color:#b3e6ff; font-weight:bold;">
+                <div style="width:100%; text-align:left; margin:18px 0 6px; color:#F5C518; font-weight:bold;">
                     Second Class - ₹{{ '%.2f'|format(show.ticket_price_second) }}
                 </div>
                 {% for row in ['C','D','E'] %}
@@ -200,21 +213,21 @@
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    background: #f6f8fc;
-                    border: 2px solid #3b82f6;
+                    background: #333;
+                    border: 2px solid #F5C518;
                     border-radius: 14px;
-                    box-shadow: 0 2px 12px #b3c6e066;
+                    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
                     padding: 22px 32px 18px 32px;
                     margin: 18px auto 0 auto;
                     max-width: 350px;
                     font-size: 1.18em;
                     font-weight: 500;
-                    color: #2563eb;
+                    color: #F5C518;
                     transition: box-shadow 0.2s;
                 }
 
                 .amount-box span {
-                    color: #222;
+                    color: #fff;
                     font-weight: bold;
                 }
             </style>
@@ -226,7 +239,7 @@
             <button type="submit">Book Selected Knight Seats</button>
         </form>
         <a href="/movies/{{ show.show_time.strftime('%d %b %Y') }}"
-            style="color:#b3e6ff; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
+            style="color:#F5C518; text-decoration:none; display:block; margin-top:18px;">&#8592; Back to Shows</a>
     </div>
     <script>
         // Highlight selected seats

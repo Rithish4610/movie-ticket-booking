@@ -6,10 +6,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: #fff;
+        background: #1e1e1e;
         border: 3px solid #e74c3c;
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
         padding: 40px 32px 32px 32px;
         z-index: 9999;
         text-align: center;
@@ -71,13 +71,13 @@
 
     .cancel-sub {
         font-size: 1.1em;
-        color: #555;
+        color: #aaa;
         margin-bottom: 18px;
     }
 
     #try-again-btn {
-        background: #3498db;
-        color: #fff;
+        background: #F5C518;
+        color: #000;
         border: none;
         border-radius: 6px;
         padding: 10px 28px;
@@ -87,7 +87,7 @@
     }
 
     #try-again-btn:hover {
-        background: #217dbb;
+        background: #ffd700;
     }
 </style>
 <div id="content">
@@ -130,7 +130,7 @@
     <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
     <p>
         <strong>Pay via UPI:</strong><br>
-        <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:blue;font-weight:bold;">
+        <a id="pay-link" href="{{ upi_url }}" target="_blank" style="color:#F5C518;font-weight:bold;">
             Click here to pay the total amount via UPI
         </a>
     </p>
@@ -144,12 +144,12 @@
     <div style="margin-top: 25px; text-align: center;">
         <div style="margin-bottom: 15px;">
             <input type="text" id="utr-input" placeholder="Enter 12-digit UPI Ref No." maxlength="12"
-                style="padding: 10px; border-radius: 5px; border: 1px solid #bdc3c7; width: 250px; font-size: 16px; text-align: center;">
+                style="padding: 10px; border-radius: 5px; border: 1px solid #555; width: 250px; font-size: 16px; text-align: center; background: #333; color: #fff;">
             <div id="utr-error" style="color: #e74c3c; font-size: 0.8em; display: none; margin-top: 5px;"></div>
         </div>
 
         <button id="simulate-btn"
-            style="background: #95a5a6; color: white; padding: 12px 30px; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: not-allowed; box-shadow: none; transition: all 0.3s ease;"
+            style="background: #333; color: #aaa; padding: 12px 30px; border: 1px solid #555; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: not-allowed; box-shadow: none; transition: all 0.3s ease;"
             disabled>
             <span id="btn-text">I have made the payment</span>
             <span id="btn-spinner" style="display: none;">Verifying UTR... 🔄</span>

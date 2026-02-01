@@ -8,6 +8,9 @@
 <p><strong>Email:</strong> {{ user_info.email }}</p>
 <p><strong>Phone:</strong> {{ user_info.phone }}</p>
 <p><strong>Total Paid:</strong> ₹{{ total_price }}</p>
-<p style="color:green;font-weight:bold;">Your payment was successful and your seats are booked!</p>
-<a href="{{ url_for('home') }}">Return to Home</a>
+<p style="color:#F5C518;font-weight:bold; font-size:1.1em;">Your payment was successful and your Knight Seats are
+    booked!</p>
+<a href="{{ url_for('home') }}"
+    style="color:#F5C518; text-decoration:none; font-weight:bold; margin-top:20px; display:inline-block; border-bottom:1px solid #F5C518;">Return
+    to Home</a>
 {% endblock %}
