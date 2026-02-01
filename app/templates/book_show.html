@@ -160,6 +160,19 @@
     <div class="container">
         <h2>Book Knight Seats for {{ movie.title }}<br><span style="font-size:0.8em; color:#aaa;">{{
                 show.show_time.strftime('%d %b %Y, %I:%M %p') }}</span></h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul style="list-style:none;padding:0;text-align:center;">
+            {% for category, message in messages %}
+            <li
+                style="color: {% if category == 'danger' %}#e74c3c{% else %}#F5C518{% endif %}; font-weight:bold; margin-bottom:10px;">
+                {{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
         <div class="screen">BatScreens</div>
         <form method="POST" id="seats-form">
             <div style="text-align:right; margin-bottom:12px;">
