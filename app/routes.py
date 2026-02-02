@@ -75,6 +75,7 @@ def payment():
     qr_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
     qr_data_url = f"data:image/png;base64,{qr_b64}"
 
+    # Define confirm_and_show helper first so it can be called from POST logic
     def confirm_and_show():
         # Mark seats as booked
         for seat in show.seats:
@@ -110,8 +111,23 @@ Enjoy your movie.
         session.pop('user_info', None)
         return render_template('confirmation.html', show=show, movie=movie, user_info=user_info, selected_seats=selected_seats, total_price=total_price)
 
-    # Logic to handle payment confirmation only when status is verified
+    # Handle Manual Payment Submission
+    if request.method == 'POST':
+        utr = request.form.get('utr')
+        if not utr or len(utr) != 12 or not utr.isdigit():
+            flash('Invalid UTR! Please enter exactly 12 digits.', 'danger')
+        else:
+            existing = PaymentRecord.query.filter_by(utr=utr).first()
+            if existing:
+                flash('This UTR has already been used!', 'danger')
+            else:
+                # Valid Payment
+                new_record = PaymentRecord(utr=utr)
+                db.session.add(new_record)
+                db.session.commit()
+                return confirm_and_show()
 
+    # Logic to handle payment confirmation only when status is verified (Polling fallback)
     # If payment_status['paid'] is True, mark seats as booked, send email, and show confirmation
     if payment_status['paid']:
         payment_status['paid'] = False  # Reset for next booking

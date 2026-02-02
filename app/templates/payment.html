@@ -142,20 +142,21 @@
 
     <!-- Payment Confirmation Button -->
     <div style="margin-top: 25px; text-align: center;">
-        <div style="margin-bottom: 15px;">
-            <input type="text" id="utr-input" placeholder="Enter 12-digit UPI Ref No." maxlength="12"
-                style="padding: 10px; border-radius: 5px; border: 1px solid #555; width: 250px; font-size: 16px; text-align: center; background: #333; color: #fff;">
-            <div id="utr-error" style="color: #e74c3c; font-size: 0.8em; display: none; margin-top: 5px;"></div>
-        </div>
+        <form method="POST" action="{{ url_for('payment') }}">
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="utr-input" name="utr" placeholder="Enter 12-digit UPI Ref No." maxlength="12"
+                    style="padding: 10px; border-radius: 5px; border: 1px solid #555; width: 250px; font-size: 16px; text-align: center; background: #333; color: #fff;">
+                <div id="utr-error" style="color: #e74c3c; font-size: 0.8em; display: none; margin-top: 5px;"></div>
+            </div>
 
-        <button id="simulate-btn"
-            style="background: #333; color: #aaa; padding: 12px 30px; border: 1px solid #555; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: not-allowed; box-shadow: none; transition: all 0.3s ease;"
-            disabled>
-            <span id="btn-text">I have made the payment</span>
-            <span id="btn-spinner" style="display: none;">Verifying UTR... 🔄</span>
-        </button>
-        <p style="color: #7f8c8d; margin-top: 10px; font-size: 0.9em;">Enter the Reference Number after paying to
-            confirm.</p>
+            <button type="submit" id="simulate-btn"
+                style="background: #333; color: #aaa; padding: 12px 30px; border: 1px solid #555; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: not-allowed; box-shadow: none; transition: all 0.3s ease;"
+                disabled>
+                <span id="btn-text">I have made the payment</span>
+            </button>
+            <p style="color: #7f8c8d; margin-top: 10px; font-size: 0.9em;">Enter the Reference Number after paying to
+                confirm.</p>
+        </form>
     </div>
 
     <script>
@@ -187,65 +188,6 @@
                     errorMsg.style.display = 'none';
                 }
             }
-        });
-
-        document.getElementById('simulate-btn').addEventListener('click', function () {
-            var btn = document.getElementById('simulate-btn');
-            var btnText = document.getElementById('btn-text');
-            var btnSpinner = document.getElementById('btn-spinner');
-            var utrVal = utrInput.value;
-
-            if (utrVal.length !== 12) return;
-
-            // Show loading state
-            btn.disabled = true;
-            btn.style.background = '#95a5a6';
-            btn.style.cursor = 'not-allowed';
-            btnText.style.display = 'none';
-            btnSpinner.style.display = 'inline';
-
-            // Simulate verification delay (2 seconds)
-            setTimeout(function () {
-                fetch('/simulate_payment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ utr: utrVal })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'ok') {
-                            btnSpinner.innerText = 'Verified! ✅';
-                            utrInput.disabled = true;
-                            // Success will be handled by the existing poller
-                        } else if (data.status === 'used_utr') {
-                            btn.disabled = false;
-                            btn.style.background = '#e74c3c';
-                            btnText.innerText = 'UTR Already Used ⚠️';
-                            btnText.style.display = 'inline';
-                            btnSpinner.style.display = 'none';
-                        } else if (data.status === 'invalid_utr_format') {
-                            btn.disabled = false;
-                            btn.style.background = '#e74c3c';
-                            btnText.innerText = 'Format Error ❌';
-                            btnText.style.display = 'inline';
-                            btnSpinner.style.display = 'none';
-                        } else {
-                            // Generic Error
-                            btn.disabled = false;
-                            btn.style.background = '#e74c3c';
-                            btnText.innerText = 'Invalid UTR ❌';
-                            btnText.style.display = 'inline';
-                            btnSpinner.style.display = 'none';
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error:', err);
-                        btn.disabled = false;
-                        btnText.innerText = 'Network Error';
-                        btnText.style.display = 'inline';
-                        btnSpinner.style.display = 'none';
-                    });
-            }, 2000);
         });
     </script>
 
