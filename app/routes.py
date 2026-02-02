@@ -2,7 +2,7 @@
 from app import app, db, mail
 from flask import render_template, request, redirect, url_for, flash, session
 from flask_mail import Message
-from app.models import Movie, Show, PaymentRecord
+from app.models import Movie, Show, PaymentRecord, Seat
 from datetime import datetime, timedelta
 from flask import jsonify
 
@@ -126,6 +126,18 @@ def book_show(show_id):
     # For demo: assume 40 seats, 8 per row, seat numbers A1-A8, B1-B8, ...
     rows = ['A','B','C','D','E']
     seats_per_row = 8
+    
+    # Auto-generate seats if they don't exist for this show
+    if not show.seats:
+        for row in rows:
+            for num in range(1, seats_per_row+1):
+                seat_num = f"{row}{num}"
+                seat = Seat(show_id=show.id, seat_number=seat_num)
+                db.session.add(seat)
+        db.session.commit()
+        # Reload show to get the new seats
+        show = Show.query.get_or_404(show_id)
+
     all_seats = [f"{row}{num}" for row in rows for num in range(1, seats_per_row+1)]
     # Get booked seats for this show
     booked_seats = set(seat.seat_number for seat in show.seats if seat.is_booked)
@@ -273,7 +285,18 @@ def add_movie():
                 ticket_price_second=float(ticket_price_second)
             )
             db.session.add(show)
-        db.session.commit()
+            db.session.commit()
+            
+            # Auto-generate seats for the new show
+            rows = ['A','B','C','D','E']
+            seats_per_row = 8
+            for row in rows:
+                for num in range(1, seats_per_row+1):
+                    seat_num = f"{row}{num}"
+                    seat = Seat(show_id=show.id, seat_number=seat_num)
+                    db.session.add(seat)
+            db.session.commit()
+
         flash('Movie and shows added successfully!', 'success')
         return redirect(url_for('add_movie'))
     return render_template('add_movie.html')
